@@ -1,8 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.Compte;
-import com.example.demo.entities.Operation;
-import com.example.demo.service.IBanque;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -10,10 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.entities.Compte;
+import com.example.demo.entities.Operation;
+import com.example.demo.service.IBanque;
+
 @Controller
 public class CompteController  {
     @Autowired
-    IBanque bank;
+    public IBanque  bank;
 
 
 
