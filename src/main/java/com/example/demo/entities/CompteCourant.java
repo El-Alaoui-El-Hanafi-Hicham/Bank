@@ -22,7 +22,11 @@ public double getDecouverte() {
 	return decouverte;
 }
 
-public void setDecouverte(double decouverte) {
+	public CompteCourant() {
+
+	}
+
+	public void setDecouverte(double decouverte) {
 	this.decouverte = decouverte;
 }
 }

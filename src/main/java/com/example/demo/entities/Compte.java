@@ -69,5 +69,7 @@ private Collection<Operation> oparation;
 		this.solde = solde;
 		this.client = client;
 	}
-	
+
+	public Compte() {
+	}
 }

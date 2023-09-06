@@ -4,14 +4,15 @@ import java.util.Date;
 import java.util.Optional;
 
 import com.example.demo.dao.IntOperationDao;
-import com.example.demo.entities.CompteCourant;
-import com.example.demo.entities.Retrait;
-import com.example.demo.entities.Versement;
+import com.example.demo.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IntCompDao;
-import com.example.demo.entities.Compte;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -91,4 +92,9 @@ double facilitesDeCaisse=0;
 
 	}
 
+	@Override
+	public Page<Operation> listOperation(Long compteNumber, int page, int size) {
+
+		return intOperationDao.CompteOp(compteNumber, PageRequest.of(page,size));
+	}
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Consultation</title>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="card" style="width: 18rem;">
+        <form method="get" th:action="@{/Consulter}">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Code Compte</label>
+                <input type="text" class="form-control" name="code"id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+<div th:if="${Compte}" class="bg-dark ">
+    <ul class="list-group">
+        <li class="list-group-item " aria-current="true" >
+            <label  >Numero Du Compte : </label>
+            <label th:text="${Compte.codeCompte}"></label></li>
+        <li class="list-group-item" >
+            <label  >Solde : </label>
+            <label th:text="${Compte.solde}"></label>
+        </li>
+        <li class="list-group-item" >
+            <label  >Date De Creation : </label>
+            <label th:text="${Compte.dateCreation}"></label>
+        </li>
+        <li class="list-group-item">
+            <label  >Type : </label>
+            <label th:text="${Compte.class.simpleName}"></label>
+        </li>
+
+        <li class="list-group-item"th:if="${Compte.class.simpleName}==CompteCourant" >
+            <label  >Decouverte : </label>
+            <label th:text="${Compte.decouverte}"></label>
+        </li>
+        <li class="list-group-item"th:if="${Compte.class.simpleName}==CompteEpargne" >
+            <label  >Taux : </label>
+            <label th:text="${Compte.taux}"></label>
+        </li>
+    </ul>
+</div>
+    <div th:if="${exception}">
+        <p th:text="${exception}" class="text-danger"></p>
+    </div>
+
+<div th:if="${Operation}" >
+    <table class="table">
+        <thead>
+        <tr>
+            <td  >
+                <label  >ID</label>
+            <td  >
+                <label  >Montant : </label>
+            </td>
+            <td >
+                <label  >DateOperation : </label>
+            </td>
+            <td >
+                <label  >Type : </label>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="o:${Operation}">
+        <td  >
+            <label th:text="${o.numero}"></label></td>
+        <td  >
+            <label th:text="${o.montant}"></label>
+        </td>
+        <td  >
+            <label th:text="${o.DateOperation}"></label>
+        </td>
+        <td >
+            <label th:text="${o.class.simpleName}"></label>
+        </td>
+        </tr>
+        </tbody>
+<!--        <li class="list-group-item"th:if="${Operation.class.simpleName}==CompteCourant" >-->
+<!--            <label  >Decouverte : </label>-->
+<!--            <label th:text="${Operation.decouverte}"></label>-->
+<!--        </li>-->
+<!--        <li class="list-group-item"th:if="${Operation.class.simpleName}==CompteEpargne" >-->
+<!--            <label  >Taux : </label>-->
+<!--            <label th:text="${Operation.taux}"></label>-->
+<!--        </li>-->
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:each="page,status:${OperationsPages}">
+                <a class="page-link" href="#" >
+                    <span  th:text="${status.index}">&laquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+</div>
+<div th:if="${OpException}">
+    <p th:text="${OpException}" class="text-danger"></p>
+</div>
+    <div>
+        <span th:if="${OPStatus}" th:text="${OPStatus}"></span>
+        <form th:action="@{SaveOperation}" method="post">
+            <input type="hidden"onchange="document.querySelector('#ClientSec').style.display='none'" name="codeCompte" th:value="${codeCompte}">
+            <div class="mb-3">
+                <label for="Versement" class="form-label">Versement</label>
+                <input type="radio"onchange="document.querySelector('#ClientSec').style.display='block'"  class="form-control" id="Versement" name="op" value="Versement">
+
+                <label for="Virement" class="form-label">Virement</label>
+                <input type="radio" class="form-control" onchange="document.querySelector('#ClientSec').style.display='none'" name="op" value="Virement" id="Virement">
+
+                <label for="Retrait" class="form-label">Retrait</label>
+                <input type="radio" class="form-control" name="op" value="Retrait" id="Retrait">
+            </div>
+    <div class="mb-3" id="ClientSec" style="display:none">
+        <label for="Retrait" class="form-label">Client Code</label>
+            <input type="text" name="clientCode" >
+    </div>
+            <div class="mb-3">
+                <label for="Retrait" class="form-label">Montant</label>
+
+                <input type="text" name="montant">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

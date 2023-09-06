@@ -10,11 +10,23 @@ import jakarta.persistence.Entity;
 public class CompteEpargne  extends Compte{
 
 	private double taux;
-	public CompteEpargne( Date dateCreation, double solde, Client client,double taux) {
+
+	public double getTaux() {
+		return taux;
+	}
+
+	public void setTaux(double taux) {
+		this.taux = taux;
+	}
+
+	public CompteEpargne(Date dateCreation, double solde, Client client, double taux) {
 		super( dateCreation, solde, client);
 		// TODO Auto-generated constructor stub
 		this.taux=taux;
 	}
-	
+	public CompteEpargne() {
+
+		// TODO Auto-generated constructor stub
+	}
 
 }

@@ -24,7 +24,11 @@ private Date dateOperation;
 private double montant;
 @ManyToOne()
 private Compte compte;
-public Operation( Date dateOperation, double montant, Compte compte) {
+
+	public Operation() {
+	}
+
+	public Operation(Date dateOperation, double montant, Compte compte) {
 	
 	
 	this.dateOperation = dateOperation;

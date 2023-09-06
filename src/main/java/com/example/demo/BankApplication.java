@@ -15,7 +15,7 @@ import com.example.demo.entities.CompteEpargne;
 import com.example.demo.entities.Retrait;
 import com.example.demo.entities.Versement;
 @SpringBootApplication
-public class BankApplication implements CommandLineRunner {
+public class BankApplication  {
 	@Autowired
 IntClientDao clientRep;
 	@Autowired
@@ -28,19 +28,19 @@ IntClientDao clientRep;
 
 
 
-	@Override
-	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
-		com.example.demo.entities.Client c1= new com.example.demo.entities.Client("Hicham","Hicham@gmail.com");
-		com.example.demo.entities.Client c2= new com.example.demo.entities.Client("FTZ","FTZ@gmail.com");
-		c1= clientRep.save(c1);
-		c2= clientRep.save(c2);
-		CompteCourant comp1=compteRep.save(new  CompteCourant (new Date(), 13.31, c1, 412));
-		CompteEpargne  comp2=compteRep.save(new  CompteEpargne (new Date(), 13.31, c1, 412));
-		operDao.save(new Retrait(new Date(), 100.00,comp1 ));
-		operDao.save(new Versement(new Date(), 100.00,comp2 ));
-		
-		
-	}
+//	@Override
+//	public void run(String... args) throws Exception {
+//		// TODO Auto-generated method stub
+//		com.example.demo.entities.Client c1= new com.example.demo.entities.Client("Hicham","Hicham@gmail.com");
+//		com.example.demo.entities.Client c2= new com.example.demo.entities.Client("FTZ","FTZ@gmail.com");
+//		c1= clientRep.save(c1);
+//		c2= clientRep.save(c2);
+//		CompteCourant comp1=compteRep.save(new  CompteCourant (new Date(), 13.31, c1, 412));
+//		CompteEpargne  comp2=compteRep.save(new  CompteEpargne (new Date(), 13.31, c1, 412));
+//		operDao.save(new Retrait(new Date(), 100.00,comp1 ));
+//		operDao.save(new Versement(new Date(), 100.00,comp2 ));
+//
+//
+//	}
 
 }

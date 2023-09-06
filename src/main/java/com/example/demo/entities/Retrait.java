@@ -8,8 +8,10 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue( "RET")
 public class Retrait extends Operation {
+	public Retrait() {
+	}
 
-	public Retrait( Date dateOperation, double montant, Compte compte) {
+	public Retrait(Date dateOperation, double montant, Compte compte) {
 		super( dateOperation, montant, compte);
 		// TODO Auto-generated constructor stub
 	}
