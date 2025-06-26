@@ -1,0 +1,36 @@
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Please sign in to your account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+            <div class="form-field">
+                <label for="username">Username</label>
+                <input id="username" type="text" pInputText formControlName="username" placeholder="Enter your username" [class.ng-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" />
+                <small class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          Username is required
+        </small>
+            </div>
+
+            <div class="form-field">
+                <label for="password">Password</label>
+                <p-password id="password" formControlName="password" placeholder="Enter your password" [toggleMask]="true" [class.ng-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"></p-password>
+                <small class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Password is required and must be at least 6 characters
+        </small>
+            </div>
+
+            <div class="form-actions">
+                <p-button type="submit" label="Sign In" [loading]="loading" [disabled]="loginForm.invalid || loading" styleClass="w-full"></p-button>
+            </div>
+
+            <div class="form-footer">
+                <p>Don't have an account?
+                    <a routerLink="/auth/register" class="link">Sign up</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>

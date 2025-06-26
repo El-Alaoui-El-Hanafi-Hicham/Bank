@@ -1,0 +1,56 @@
+<div class="welcome-section">
+    <p-card>
+        <ng-template pTemplate="header">
+            <h3>Welcome to Your Bank Account</h3>
+        </ng-template>
+        <ng-template pTemplate="content">
+            <p>Hello {{ currentUser?.username }}! You are successfully logged in.</p>
+            <p>Your email: {{ currentUser?.email }}</p>
+            <p>This is your secure dashboard where you can manage your banking activities.</p>
+        </ng-template>
+    </p-card>
+</div>
+
+<div class="features-section">
+    <div class="feature-grid">
+        <p-card>
+            <ng-template pTemplate="header">
+                <h4>Account Overview</h4>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <p>View your account balances and recent transactions.</p>
+                <p-button label="View Accounts" icon="pi pi-wallet" routerLink="/accounts"></p-button>
+            </ng-template>
+        </p-card>
+
+        <p-card>
+            <ng-template pTemplate="header">
+                <h4>Transfer Money</h4>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <p>Send money to other accounts or make payments.</p>
+                <p-button label="Transfer" icon="pi pi-send"></p-button>
+            </ng-template>
+        </p-card>
+
+        <p-card>
+            <ng-template pTemplate="header">
+                <h4>Transaction History</h4>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <p>Review your transaction history and statements.</p>
+                <p-button label="View History" icon="pi pi-history"></p-button>
+            </ng-template>
+        </p-card>
+
+        <p-card>
+            <ng-template pTemplate="header">
+                <h4>Settings</h4>
+            </ng-template>
+            <ng-template pTemplate="content">
+                <p>Manage your account settings and preferences.</p>
+                <p-button label="Settings" icon="pi pi-cog"></p-button>
+            </ng-template>
+        </p-card>
+    </div>
+</div>
