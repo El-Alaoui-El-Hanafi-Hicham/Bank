@@ -17,43 +17,60 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    
+
     @Autowired
     private JwtUtil jwtUtil;
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                  HttpServletResponse response, 
-                                  FilterChain filterChain) throws ServletException, IOException {
-        
-        final String authorizationHeader = request.getHeader("Authorization");
-        
-        String username = null;
-        String jwt = null;
-        
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            try {
-                username = jwtUtil.extractUsername(jwt);
-            } catch (Exception e) {
-                // Token is invalid, continue without authentication
-            }
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        // Allow CORS preflight requests to pass through
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            filterChain.doFilter(request, response);
+            return;
         }
-        
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+
+        // Skip filter for authentication endpoints
+        if (request.getServletPath().contains("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
         }
-        
-        filterChain.doFilter(request, response);
+
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        try {
+            final String jwt = authHeader.substring(7);
+            final String username = jwtUtil.extractUsername(jwt);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    filterChain.doFilter(request, response);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                }
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
-} 
+}

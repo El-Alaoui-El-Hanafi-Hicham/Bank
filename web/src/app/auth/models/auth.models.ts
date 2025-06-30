@@ -29,4 +29,5 @@ export interface Account {
   accountNumber: string;
   balance: number;
   accountType: string;
+  timeStamp: string|Date|number|undefined|null;
 }

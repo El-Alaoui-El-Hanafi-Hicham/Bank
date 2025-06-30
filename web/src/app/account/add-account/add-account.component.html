@@ -1,0 +1,50 @@
+    <h1 class="tw-text-2xl tw-font-bold tw-mb-4">Add Account</h1>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="tw-flex tw-flex-col tw-gap-6">
+        <!-- Name (Read-only) -->
+        <div>
+            <label for="name" class="tw-block tw-font-semibold tw-mb-1">Name</label>
+            <input id="name" type="text" pInputText class="tw-border tw-border-gray-300 tw-rounded-md tw-h-12 tw-px-3 tw-w-full tw-bg-gray-100" [disabled]="true" formControlName="name" placeholder="User's Name" aria-label="Account holder name" />
+        </div>
+
+        <!-- Account Type -->
+        <div>
+            <label for="accType" class="tw-block tw-font-semibold tw-mb-1">Account Type</label>
+            <p-dropdown id="accType" formControlName="accType" [options]="accType" optionLabel="name" placeholder="Select account type" class="tw-w-full" [showClear]="true" [filter]="true" aria-label="Account type"></p-dropdown>
+            <div *ngIf="formGroup.get('accType')?.invalid && formGroup.get('accType')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">
+                Please select an account type.
+            </div>
+        </div>
+
+        <!-- Solde -->
+        <div>
+            <label for="solde" class="tw-block tw-font-semibold tw-mb-1">Initial Balance</label>
+            <p-inputNumber id="solde" formControlName="solde" [min]="0" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter initial balance" aria-label="Initial balance"></p-inputNumber>
+            <div *ngIf="formGroup.get('solde')?.invalid && formGroup.get('solde')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">
+                Please enter a valid balance.
+            </div>
+        </div>
+
+        <!-- Taux or Decouverte (Conditional) -->
+        <div *ngIf="formGroup.get('accType')?.value?.code === 'CE'; else decouverteField">
+            <label for="taux" class="tw-block tw-font-semibold tw-mb-1">Interest Rate (%)</label>
+            <p-inputNumber id="taux" formControlName="taux" [min]="0" [max]="100" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter interest rate" aria-label="Interest rate"></p-inputNumber>
+            <div *ngIf="formGroup.get('taux')?.invalid && formGroup.get('taux')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">
+                Please enter a valid interest rate.
+            </div>
+        </div>
+        <ng-template #decouverteField>
+            <div>
+                <label for="decouverte" class="tw-block tw-font-semibold tw-mb-1">Overdraft Limit</label>
+                <p-inputNumber id="decouverte" formControlName="decouverte" [min]="0" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter overdraft limit" aria-label="Overdraft limit"></p-inputNumber>
+                <div *ngIf="formGroup.get('decouverte')?.invalid && formGroup.get('decouverte')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">
+                    Please enter a valid overdraft limit.
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- Submit Button -->
+        <p-button  icon="pi pi-save"label="Save Account" type="submit" [disabled]="!formGroup.valid" [loading]="loading" class="tw-bg-blue-600 tw-text-white tw-font-bold tw-py-3 tw-rounded-lg tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-blue-700 focus:tw-ring-2 focus:tw-ring-blue-400 focus:tw-outline-none tw-mt-4 tw-flex tw-items-center tw-p-5">
+      <!-- <i class="pi pi-save tw-mr-2"></i>
+      Save Account -->
+    </p-button>
+    </form>

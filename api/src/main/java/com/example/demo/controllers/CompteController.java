@@ -1,96 +1,115 @@
 package com.example.demo.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import com.example.demo.dto.AccountDTO;
+import com.example.demo.entities.User;
 import com.example.demo.entities.Compte;
 import com.example.demo.entities.Operation;
+import com.example.demo.service.AccountService;
+import com.example.demo.service.AuthService;
 import com.example.demo.service.IBanque;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-public class CompteController  {
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/accounts")  // Changed to plural form as per REST conventions
+@CrossOrigin(origins = "*")      // Add CORS at controller level for extra safety
+public class CompteController {
+
     @Autowired
-    public IBanque  bank;
+    private IBanque bank;
 
+    @Autowired
+    private AccountService accountService;
 
+    @Autowired
+    private AuthService authService;
 
-    @RequestMapping("/")
-    public String index(Long Code){
-        return "consultation";
-    }
-    @RequestMapping("/Consulter")
-    public String consulter(Model model,@RequestParam("code") Long Code) {
-        Compte compte = null;
+    @GetMapping
+    public ResponseEntity<List<Compte>> getAllAccounts() {
         try {
-            compte = bank.ConsulterCompte(Code);
-
-try {
-    Page<Operation> operations = bank.listOperation(Code,0,4);
-
-    model.addAttribute("Operation",operations.getContent());
-    int[] pages= new int[operations.getTotalPages()];
-    model.addAttribute("OperationsPages",pages);
-}catch (Exception e){
-    model.addAttribute("OpException","Pas d'operation");
-}
-model.addAttribute("codeCompte",compte.getCodeCompte());
-
-            model.addAttribute("Compte",compte);
-
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            List<Compte> accounts = accountService.getAccounts(username);
+            return ResponseEntity.ok(accounts);
         } catch (Exception e) {
-            model.addAttribute("exception","compte non trouve");
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-            return "consultation";
-
     }
 
-    @RequestMapping("/SaveOperation")
-    public String saveOperation(Model model,@RequestParam("codeCompte")Long codeCompte,@RequestParam("op") String op,Long ClientCode,@RequestParam("montant")double montant){
-       switch (op){
+    @PostMapping
+    public ResponseEntity<String> createAccount(@RequestBody AccountDTO accountDTO) {
+        System.out.println("ACCount DTO ----------> "+accountDTO.Solde);
+        System.out.println("ACCount DTO ----------> "+accountDTO.userType);
+        System.out.println("ACCount DTO ----------> "+accountDTO.TOD);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+        System.out.println(username+" <=================USERNAE");
+            User user = authService.getUser(username);
+        System.out.println(user.getEmail()+" <=================USERNAE");
+        try {
+            String result = accountService.createAccount(user, accountDTO.userType, accountDTO.Solde, accountDTO.TOD);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
-        case"Versement":
-            try {
-                bank.Verser(codeCompte,montant);
-
-          model.addAttribute("OPStatus","Vous Avez versez a "+codeCompte+", le montant de "+montant);
-
-            } catch (Exception e) {
-                model.addAttribute("OPStatus","Votre versement a echoue");
-
+    @GetMapping("/{code}")
+    public ResponseEntity<Compte> getAccount(@PathVariable Long code) {
+        try {
+            Compte compte = bank.ConsulterCompte(code);
+            if (compte == null) {
+                return ResponseEntity.notFound().build();
             }
-            break;
+            return ResponseEntity.ok(compte);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-        case"Virement":
-            try {
-                bank.Virement(codeCompte,ClientCode,montant);
+    @GetMapping("/{code}/operations")
+    public ResponseEntity<Page<Operation>> getAccountOperations(
+            @PathVariable Long code,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size) {
+        try {
+            Page<Operation> operations = bank.listOperation(code, page, size);
+            return ResponseEntity.ok(operations);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-                model.addAttribute("OPStatus","Vous Avez effectuer un virement du "+codeCompte+" a "+ClientCode +", le montant de "+montant);
-
-            } catch (Exception e) {
-                model.addAttribute("OPStatus","Votre virement a echoue");
-
+    @PostMapping("/{code}/operations")
+    public ResponseEntity<String> saveOperation(
+            @PathVariable Long code,
+            @RequestParam("op") String op,
+            @RequestParam(value = "clientCode", required = false) Long clientCode,
+            @RequestParam("montant") double montant) {
+        try {
+            switch (op) {
+                case "Versement":
+                    bank.Verser(code, montant);
+                    return ResponseEntity.ok("Versement effectué avec succès.");
+                case "Virement":
+                    bank.Virement(code, clientCode, montant);
+                    return ResponseEntity.ok("Virement effectué avec succès.");
+                case "Retrait":
+                    bank.Retrait(code, montant);
+                    return ResponseEntity.ok("Retrait effectué avec succès.");
+                default:
+                    return ResponseEntity.badRequest().body("Type d'opération inconnu.");
             }
-               break;
-
-        case"Retrait":
-            try {
-                bank.Retrait(codeCompte,montant);
-
-                model.addAttribute("OPStatus","Vous Avez Retrait du compte numero "+codeCompte+", le montant de "+montant);
-
-            } catch (Exception e) {
-                model.addAttribute("OPStatus","Votre Retrait a echoue");
-
-            }
-               break;
-
-       }
-        return "redirect:Consulter?code="+codeCompte;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

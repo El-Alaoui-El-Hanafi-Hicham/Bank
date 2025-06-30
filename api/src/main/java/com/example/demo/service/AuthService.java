@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
     
@@ -33,7 +35,8 @@ public class AuthService {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        
+        System.out.println("UserName =========> "+ request.getUsername());
+        System.out.println("Password =========> "+ request.getPassword());
         // Load user details
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -85,4 +88,13 @@ public class AuthService {
         
         return new AuthResponse(token, userInfo);
     }
-} 
+
+    public User getUser(String username) {
+    Optional<User> user  =userRepository.findByUsername(username);
+    if(user.isPresent()){
+        return user.get();
+    }else{
+        throw new RuntimeException();
+    }
+    }
+}

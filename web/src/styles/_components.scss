@@ -1,1 +1,60 @@
- 
+// Custom component styles
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-sm $spacing-md;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &.btn-primary {
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+        &:hover {
+            background-color: darken(#3b82f6, 10%);
+        }
+    }
+    &.btn-secondary {
+        background-color: var(--surface-100);
+        color: var(--text-color);
+        border: 1px solid var(--surface-200);
+        &:hover {
+            background-color: var(--surface-200);
+        }
+    }
+}
+
+.card {
+    background: var(--surface-0);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: $spacing-lg;
+    margin-bottom: $spacing-md;
+}
+
+.form-group {
+    margin-bottom: $spacing-md;
+    label {
+        display: block;
+        margin-bottom: $spacing-xs;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: $spacing-sm;
+        border: 1px solid var(--surface-200);
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        &:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+    }
+}

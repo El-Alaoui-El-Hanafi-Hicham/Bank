@@ -40,7 +40,9 @@ public class AuthController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Authentication endpoint is working!");
     }
-    
+
+
+
     // Error response class
     public static class ErrorResponse {
         private String message;

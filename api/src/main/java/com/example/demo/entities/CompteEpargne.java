@@ -2,12 +2,14 @@ package com.example.demo.entities;
 
 import java.util.Date;
 
-import jakarta.persistence.DiscriminatorColumn;
+import groovy.transform.builder.Builder;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+
 @Entity
 @DiscriminatorValue("CE")
-public class CompteEpargne  extends Compte{
+@Builder
+public class CompteEpargne extends Compte {
 
 	private double taux;
 
@@ -20,13 +22,11 @@ public class CompteEpargne  extends Compte{
 	}
 
 	public CompteEpargne(Date dateCreation, double solde, User user, double taux) {
-		super( dateCreation, solde, user);
-		// TODO Auto-generated constructor stub
-		this.taux=taux;
+		super(dateCreation, solde, user);
+		this.taux = taux;
 	}
+
 	public CompteEpargne() {
-
-		// TODO Auto-generated constructor stub
+		// Default constructor
 	}
-
 }

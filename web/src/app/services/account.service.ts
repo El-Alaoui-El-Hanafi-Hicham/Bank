@@ -8,7 +8,7 @@ import { Account, User } from '../auth/models/auth.models';
 })
 export class AccountService {
 
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = 'http://localhost:8080/api/accounts';
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly USER_KEY = 'current_user';
 
@@ -19,8 +19,21 @@ export class AccountService {
 
    }
 
-   getUserAccounts(): Observable<Account[]> {
-    return this.http.get<Account[]>(`${this.API_URL}/accounts`);
+   getUserAccounts(): Observable<any[]> {
+    return this.http.get<Account[]>(`${this.API_URL}`);
+  }
+
+  addAccount(account: any): Observable<any> {
+    let payload={
+    "userType":account?.accType.code,
+ "Solde":account.solde,
+ "TOD":account.decouverte??account.taux
+}
+    return this.http.post<Account>(`${this.API_URL}`, payload,{
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    },);
   }
 
 }

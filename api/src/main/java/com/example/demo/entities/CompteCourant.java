@@ -2,11 +2,13 @@ package com.example.demo.entities;
 
 import java.util.Date;
 
+import groovy.transform.builder.Builder;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue( "CC")
+@Builder
 public class CompteCourant extends Compte {
 
 

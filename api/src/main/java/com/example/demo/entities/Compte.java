@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
+import groovy.transform.builder.Builder;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE_COMP", discriminatorType = DiscriminatorType.STRING, length = 2)
-
+@Builder
 
 public abstract class Compte implements Serializable{
 	
@@ -58,10 +59,10 @@ private Collection<Operation> oparation;
 		this.solde = solde;
 	}
 
-	public Compte(Date dateCreation, double solde, User user) {
+	public Compte( Date dateCreation,double solde, User user) {
 		super();
 		
-		this.dateCreation = dateCreation;
+this.dateCreation= dateCreation;
 		this.solde = solde;
 		this.user = user;
 	}

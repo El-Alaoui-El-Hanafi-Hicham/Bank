@@ -1,28 +1,31 @@
- // Import your custom variables first
- @import 'styles/variables';
- // Global reset and base styles
- * {
-     box-sizing: border-box;
- }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+// Import your custom variables first
+@import 'styles/variables';
+// Global reset and base styles
+* {
+    box-sizing: border-box;
+}
 
- html,
- body {
-     height: 100%;
-     margin: 0;
-     padding: 0;
- }
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
- body {
-     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     font-size: 14px;
-     color: var(--text-color);
-     background-color: var(--surface-0);
-     line-height: 1.5;
- }
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--surface-0);
+    line-height: 1.5;
+}
 
- // Import PrimeNG overrides
- @import 'styles/primeng-overrides';
- // Import your components
- @import 'styles/components';
- // Utility classes
- @import 'styles/utilities';
+// Import PrimeNG overrides
+@import 'styles/primeng-overrides';
+// Import your components
+@import 'styles/components';
+// Import your custom utilities AFTER Tailwind to ensure they take precedence
+@import 'styles/utilities';
