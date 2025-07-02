@@ -31,3 +31,9 @@ export interface Account {
   accountType: string;
   timeStamp: string|Date|number|undefined|null;
 }
+export interface Compte {
+        "codeCompte": number,
+        "dateCreation": string|Date|number|undefined|null;
+        "solde": number,
+        "taux": number
+}

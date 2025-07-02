@@ -28,6 +28,10 @@ import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { routes } from './app.routes';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MainComponent } from './dashboard/main/main/main.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { accountReducer } from './store/account/account.reducer';
+import { AccountEffects } from './store/account/account.effects';
 
 @NgModule({
   declarations: [
@@ -49,7 +53,9 @@ import { MainComponent } from './dashboard/main/main/main.component';
     PasswordModule,
     ToastModule,
     RouterLink,
-    DashboardModule
+    DashboardModule,
+    StoreModule.forRoot({ accounts: accountReducer }),
+    EffectsModule.forRoot([AccountEffects]), // or forFeature if in a feature module
   ],
   providers: [
     MessageService,

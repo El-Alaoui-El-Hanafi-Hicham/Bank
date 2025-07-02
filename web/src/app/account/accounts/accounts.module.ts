@@ -11,17 +11,23 @@ import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
+import { SkeletonModule } from 'primeng/skeleton';
+import {  TableModule } from 'primeng/table';
+import { AccountDetailsComponent } from '../account-details/account-details.component';
 
 @NgModule({
   declarations: [
     AccountsComponent,
-    AddAccountComponent
+    AddAccountComponent,
+    AccountDetailsComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    SkeletonModule,
     TreeSelectModule,
     InputTextModule,
+    TableModule,
     FormsModule,
     PanelModule,
     ButtonModule,

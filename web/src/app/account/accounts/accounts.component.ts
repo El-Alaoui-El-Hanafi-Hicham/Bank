@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService } from '../../services/account.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AccountState } from '../../store/account/account.reducer';
+import * as AccountActions from '../../store/account/account.actions';
 import { Account } from '../../auth/models/auth.models';
-import { AddAccountComponent } from '../add-account/add-account.component';
 
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.css'
 })
-export class AccountsComponent implements OnInit{
-  accounts: Account[] = [];
-  constructor(private accountService: AccountService) {
+export class AccountsComponent implements OnInit {
+  loading$: Observable<boolean> = this.store.select(state => state.accounts.loading);
+  accounts$: Observable<Account[]> = this.store.select(state => state.accounts.accounts);
+  selectedAccount!:Account;
 
-  }
+  constructor(private store: Store<{ accounts: AccountState }>) {}
+
   ngOnInit(): void {
-    this.accountService.getUserAccounts().subscribe(accounts => {
-      this.accounts = accounts;
-      this.accounts = accounts.map(account =>( {...account,accountType:account?.taux?"CE":"CC",accountNumber:account.codeCompte, balance: account.solde}));
-    })
+    this.store.dispatch(AccountActions.loadAccounts());
   }
 }

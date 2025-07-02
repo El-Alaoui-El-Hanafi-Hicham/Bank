@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AccountService } from '../../services/account.service';
+import { Store } from '@ngrx/store';
+import * as AccountActions from '../../store/account/account.actions';
+import { AccountState } from '../../store/account/account.reducer';
+import { Subscription } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-add-account',
@@ -16,11 +21,13 @@ export class AddAccountComponent {
     { name: 'Compte d\'epargne', code: 'CE' }
   ];
   loading:Boolean = false;
-
+  private actionsSubscription: Subscription;
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private store: Store<{ accounts: AccountState }>,
+    private actions$: Actions
   ) {
     const currentUser = JSON.parse(localStorage.getItem('current_user') ?? '{}');
     this.formGroup = this.fb.group({
@@ -45,6 +52,13 @@ export class AddAccountComponent {
       this.formGroup.get('taux')?.updateValueAndValidity();
       this.formGroup.get('decouverte')?.updateValueAndValidity();
     });
+
+        this.actionsSubscription = this.actions$.pipe(
+      ofType(AccountActions.addNewAccountSuccess)
+    ).subscribe(() => {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ACCOUNT CREATED SUCCESSFULLY' });
+      this.formGroup.reset();
+    });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -56,8 +70,7 @@ export class AddAccountComponent {
       this.formGroup.markAllAsTouched();
       return;
     }
-    this.loading = true;
-    // Prepare payload
+    // Remove manual loading management!
     const formValue = this.formGroup.getRawValue();
     const payload: any = {
       name: formValue.name,
@@ -66,27 +79,6 @@ export class AddAccountComponent {
       taux: formValue.accType?.code === 'CE' ? formValue.taux : null,
       decouverte: formValue.accType?.code === 'CC' ? formValue.decouverte : null
     };
-    this.accountService.addAccount(payload).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Account created successfully!'
-        });
-        this.formGroup.reset();
-        // Optionally, reset accType to null
-        this.formGroup.get('accType')?.setValue(null);
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error?.error?.message || 'Failed to create account.'
-        });
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+    this.store.dispatch(AccountActions.addNewAccount({ account: payload }));
   }
 }

@@ -33,11 +33,13 @@ public class CompteController {
     private AuthService authService;
 
     @GetMapping
-    public ResponseEntity<List<Compte>> getAllAccounts() {
+    public ResponseEntity<Page<Compte>> getAllAccounts( @RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "4") int size) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            List<Compte> accounts = accountService.getAccounts(username);
+            User credentials = (User) authentication.getPrincipal();
+
+            Page<Compte> accounts = accountService.getAccounts(credentials.getId(),page,size);
             return ResponseEntity.ok(accounts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -63,7 +65,8 @@ public class CompteController {
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Compte> getAccount(@PathVariable Long code) {
+    public ResponseEntity<Compte> getAccount(@PathVariable Long code, @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "4") int size) {
         try {
             Compte compte = bank.ConsulterCompte(code);
             if (compte == null) {

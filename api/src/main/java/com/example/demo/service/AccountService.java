@@ -5,6 +5,9 @@ import com.example.demo.dao.IntCompDao;
 import com.example.demo.dto.AccountDTO;
 import com.example.demo.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,8 +22,8 @@ public class AccountService {
 
     }
 
-    public List<Compte> getAccounts(String email){
-        List<Compte> intCompDaoAlln=intCompDao.findAll();
+    public Page<Compte> getAccounts(Long id,int page,int size){
+        Page<Compte> intCompDaoAlln=intCompDao.findByUserUserID(id, PageRequest.of(page,size));
         return intCompDaoAlln;
     }
     public String createAccount(User user, AccountDTO.UserType type,Double solde, Double TOD ){

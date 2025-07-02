@@ -1,13 +1,15 @@
-<div class="accounts-containe tw-flex tw-flex-col tw-gap-5">
+<div class="accounts-containe tw-flex tw-flex-col tw-gap-5" *ngIf="!selectedAccount;else selectedAccountTemplate">
     <h2 class="tw-text-3xl tw-font-bold">Accounts</h2>
-    <div *ngIf="this.accounts.length === 0;else AvailableAccounts">
+    <div class="tw-flex tw-gap-3">
+
+    <div *ngIf="(accounts$ | async)?.length === 0; else AvailableAccounts" class="tw-flex tw-gap-4 tw-flex-wrap tw-w-full tw-items-center tw-justify-center tw-font-bold tw-text-2xl">
         No accounts found
     </div>
     <ng-template #AvailableAccounts>
-      <div class="tw-flex tw-gap-5 ">
+      <div class="tw-flex tw-gap-5 " >
 
-        <div class="tw-flex tw-gap-4 tw-flex-wrap tw-items-stretch">
-            <div *ngFor="let account of accounts" class="account-card tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-6 tw-flex tw-flex-col tw-justify-between tw-w-full sm:tw-w-[30%] tw-min-w-[260px] tw-max-w-xs tw-transition-transform tw-duration-200 hover:tw--translate-y-1 hover:tw-shadow-2xl tw-border-t-4"
+        <div class="tw-flex tw-gap-4 tw-flex-wrap tw-items-stretch" *ngIf="!(loading$ | async);else loadingTemplate">
+            <div *ngFor="let account of accounts$ | async" class="account-card tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-6 tw-flex tw-flex-col tw-justify-between tw-w-full sm:tw-w-[30%] tw-min-w-[260px] tw-max-w-xs tw-transition-transform tw-duration-200 hover:tw--translate-y-1 hover:tw-shadow-2xl tw-border-t-4"
                 [ngClass]="{
         'tw-border-blue-500': account.accountType === 'CC',
         'tw-border-green-500': account.accountType === 'CE'
@@ -36,11 +38,65 @@
                     <i class="fas fa-clock"></i>
                     <span>{{account.timeStamp | date:'medium'}}</span>
                 </div>
+                <button
+      pButton
+      type="button"
+      class="tw-mt-4 tw-bg-black tw-rounded-md tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-flex tw-items-center tw-gap-2 tw-w-fit hover:tw-bg-gray-700 tw-transmition-colors tw-duration-200"
+      (click)="selectedAccount = account">
+      SELECT
+    </button>
             </div>
       </div>
 
-            <app-add-account class="tw-shadow-lg tw-rounded-xl tw-bg-white tw-p-8 tw-max-w-lg tw-w-1/3"></app-add-account>
+    </div>
+  </ng-template>
+  <app-add-account class="tw-shadow-lg tw-rounded-xl tw-bg-white tw-p-8 tw-max-w-lg tw-w-1/3"></app-add-account>
+
+  <ng-template #loadingTemplate>
+ <div class="tw-flex tw-gap-4 tw-flex-wrap tw-items-stretch">
+           <div *ngFor="let account of accounts$ | async" class="account-card tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-6 tw-flex tw-flex-col tw-justify-between tw-w-full sm:tw-w-[30%] tw-min-w-[260px] tw-max-w-xs tw-transition-transform tw-duration-200 hover:tw--translate-y-1 hover:tw-shadow-2xl tw-border-t-4"
+                [ngClass]="{
+        'tw-border-blue-500': account.accountType === 'CC',
+        'tw-border-green-500': account.accountType === 'CE'
+      }">
+                <div class="tw-flex tw-items-center tw-gap-3">
+                    <span *ngIf="account.accountType === 'CC'" class="tw-text-blue-500 tw-text-3xl">
+          <i class="fas fa-university"></i>
+        </span>
+                    <span *ngIf="account.accountType === 'CE'" class="tw-text-green-500 tw-text-3xl">
+          <i class="fas fa-piggy-bank"></i>
+        </span>
+                    <div>
+                        <div class="tw-text-xs tw-uppercase tw-text-gray-400">Account Number</div>
+                        <div class="tw-font-semibold tw-text-lg">                        <p-skeleton width="6rem" height="2rem" />
+</div>
+                    </div>
+                </div>
+                <div class="tw-mt-4">
+                    <div class="tw-text-xs tw-uppercase tw-text-gray-400">Type</div>
+                    <div class="tw-font-semibold tw-text-base">                        <p-skeleton width="6rem" height="2rem" />
+</div>
+                </div>
+                <div class="tw-mt-4">
+                    <div class="tw-text-xs tw-uppercase tw-text-gray-400">Balance</div>
+                    <div class="tw-font-bold tw-text-2xl tw-text-blue-600">                        <p-skeleton width="6rem" height="2rem" />
+ $</div>
+                </div>
+                <div class="tw-mt-4 tw-flex tw-items-center tw-gap-2 tw-text-gray-400 tw-text-xs">
+                    <i class="fas fa-clock"></i>
+                    <span>{{account.timeStamp | date:'medium'}}</span>
+                </div>
+            </div>
         </div>
-    </ng-template>
+</ng-template>
+    </div>
 
 </div>
+
+<!-- Pass selectedAccount to app-account-details -->
+<ng-template #selectedAccountTemplate>
+  <app-account-details
+    [selectedAccount]="selectedAccount"
+    class="tw-shadow-lg tw-rounded-xl tw-max-w-lg tw-w-1/3">
+  </app-account-details>
+</ng-template>
