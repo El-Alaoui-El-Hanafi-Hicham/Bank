@@ -1,0 +1,25 @@
+spring.jpa.show-sql=true
+spring.application.name=BankApp
+server.port=8080
+spring.datasource.url=jdbc:mysql://bankweb-mysql.mysql.database.azure.com:3306/bank?useSSL=true&requireSSL=true&enabledTLSProtocols=TLSv1.2&allowPublicKeyRetrieval=true
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.username=dbadmin@bankweb-mysql
+spring.datasource.password=Alaoui17
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+# Connection validation
+spring.datasource.test-on-borrow=true
+spring.datasource.validation-query=SELECT 1
+logging.level.org.springframework.security=DEBUG
+logging.level.com.example.demo.security=DEBUG
+logging.level.org.springframework.web=DEBUG
+logging.level.com.example.demo=DEBUG
+
+jwt.secret=mySecretKey123456789012345678901234567890123456789012345678901234567890
+jwt.expiration=86400000
+spring.profiles.active=dev
+server.error.include-message=always
+server.error.include-binding-errors=always
+# Connection pool settings
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.maximum-pool-size=5

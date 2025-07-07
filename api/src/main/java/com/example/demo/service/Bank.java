@@ -80,7 +80,8 @@ double facilitesDeCaisse=0;
 	public void Virement(Long compteNumber, Long compteNumber2, double amount) {
 		try {
 		Compte compte1 =ConsulterCompte(compteNumber);
-		Compte compte2 =ConsulterCompte(compteNumber);
+		Compte compte2 =ConsulterCompte(compteNumber2);
+
 		if(compte1!=null && compte2!=null){
 			Retrait( compte1.getCodeCompte(),  amount);
 			Verser(compte2.getCodeCompte(),amount);

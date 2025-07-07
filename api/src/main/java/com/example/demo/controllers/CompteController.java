@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.dto.AccountDTO;
+import com.example.demo.dto.OperationDTO;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Compte;
 import com.example.demo.entities.Operation;
@@ -48,14 +49,10 @@ public class CompteController {
 
     @PostMapping
     public ResponseEntity<String> createAccount(@RequestBody AccountDTO accountDTO) {
-        System.out.println("ACCount DTO ----------> "+accountDTO.Solde);
-        System.out.println("ACCount DTO ----------> "+accountDTO.userType);
-        System.out.println("ACCount DTO ----------> "+accountDTO.TOD);
+      
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-        System.out.println(username+" <=================USERNAE");
             User user = authService.getUser(username);
-        System.out.println(user.getEmail()+" <=================USERNAE");
         try {
             String result = accountService.createAccount(user, accountDTO.userType, accountDTO.Solde, accountDTO.TOD);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
@@ -94,19 +91,19 @@ public class CompteController {
     @PostMapping("/{code}/operations")
     public ResponseEntity<String> saveOperation(
             @PathVariable Long code,
-            @RequestParam("op") String op,
-            @RequestParam(value = "clientCode", required = false) Long clientCode,
-            @RequestParam("montant") double montant) {
+            @RequestBody OperationDTO operationDTO
+            ) {
+        System.out.println(operationDTO.getMontant());
         try {
-            switch (op) {
+            switch (operationDTO.getOp()) {
                 case "Versement":
-                    bank.Verser(code, montant);
+                    bank.Verser(code, operationDTO.getMontant());
                     return ResponseEntity.ok("Versement effectué avec succès.");
                 case "Virement":
-                    bank.Virement(code, clientCode, montant);
+                    bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
                     return ResponseEntity.ok("Virement effectué avec succès.");
                 case "Retrait":
-                    bank.Retrait(code, montant);
+                    bank.Retrait(code, operationDTO.getMontant());
                     return ResponseEntity.ok("Retrait effectué avec succès.");
                 default:
                     return ResponseEntity.badRequest().body("Type d'opération inconnu.");

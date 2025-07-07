@@ -2,9 +2,7 @@ package com.example.demo.entities;
 
 import java.util.Date;
 
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
 @DiscriminatorValue( "VER")
