@@ -42,6 +42,18 @@ export class AccountEffects {
       )
     )
   );
+  makeTransaction$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AccountActions.makeTransaction),
+      switchMap(action =>
+        this.accountService.makeTransaction(action.account,action.transaction).pipe(
+          map((v) => {
+            return AccountActions.loadAccounts()}),
+          catchError(error => of(AccountActions.loadAccountsFailure({ error })))
+        )
+      )
+    )
+  );
 
   constructor(
     private actions$: Actions,

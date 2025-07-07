@@ -48,7 +48,6 @@ export const accountReducer = createReducer(
    on(loadTransactions, state => ({ ...state, loading: true, error: null })),
    on(loadTransactionsSuccess, (state, actions ) =>{
     const {transactions,page,size}=actions;
-    console.log(transactions)
     return {
     ...state,
     transactionsObj: {transactions: transactions, page: page, size:size, loading: false},

@@ -25,4 +25,11 @@ export const loadTransactionsSuccess = createAction(
   "[Account] Get Transactions",
   props<{transactions: Object,page:number,size:number} >()
 )
-
+export const loadTransactionsFailure = createAction(
+  "[Account] Get Transactions Failure",
+  props<{ error: any }>()
+)
+export const makeTransaction = createAction(
+  "[Account] Make Transaction",
+  props<{ account: Account,transaction: Object }>()
+)

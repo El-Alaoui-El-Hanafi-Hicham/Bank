@@ -10,16 +10,20 @@ import { AccountState } from '../store/account/account.reducer';
 })
 export class AccountService {
 
-  private readonly API_URL = 'http://localhost:8080/api/accounts';
-  private readonly TOKEN_KEY = 'jwt_token';
-  private readonly USER_KEY = 'current_user';
+
+  private readonly API_URL = (window as any)["env"]?.API_URL || 'http://localhost:8080/api/accounts';
+  private readonly TOKEN_KEY = (window as any)["env"]?.TOKEN_KEY || 'jwt_token';
+  private readonly USER_KEY = (window as any)["env"]?.USER_KEY || 'current_user';
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   constructor(private http: HttpClient, private store:Store<{ accounts: AccountState }>) {}
 
   getUserAccounts(): Observable<any> {
-    return this.http.get<Account[]>(`${this.API_URL}`);
+    return this.http.get<Account[]>(`${this.API_URL}`,{
+      headers: {
+        'Content-Type': 'application/json'
+      },});
   }
 
   addAccount(account: any): Observable<any> {
@@ -32,8 +36,7 @@ export class AccountService {
       headers: {
         'Content-Type': 'application/json'
       },
-      responseType: 'text' // <-- Add this line
-    });
+      responseType: 'text'    });
   }
 
   getTransactions(account: Account, page: number = 1, size: number = 10): Observable<any> {
@@ -49,4 +52,16 @@ export class AccountService {
       responseType: 'json'
     });
   }
+    makeTransaction(account: Account, transaction: { amount?: number; [key: string]: any }): Observable<any> {
+      const payload = {
+        ...transaction,
+        montant: transaction?.amount ?? 1,
+      };
+      return this.http.post(`${this.API_URL}/${account?.accountNumber}/operations`, payload, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        responseType: 'json'
+      });
+    }
 }
