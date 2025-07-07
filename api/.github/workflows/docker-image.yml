@@ -27,18 +27,24 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build BE Docker image
-      - name: Build BE Docker image
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build and push BE Docker image
+      - name: Build and push BE Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./api
-          push: false
-          tags: bank-backend:build
+          push: true
+          tags: yourdockerhubuser/bank-backend:latest
 
-      # Build FE Docker image
-      - name: Build FE Docker image
+      # Build and push FE Docker image
+      - name: Build and push FE Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./web
-          push: false
-          tags: bank-frontend:build
+          push: true
+          tags: yourdockerhubuser/bank-frontend:latest
