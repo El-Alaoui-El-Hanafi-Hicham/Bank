@@ -17,7 +17,7 @@ public class Client implements Serializable {
 	private Long code;
 private String nom;
 private String email;
-// @OneToMany(mappedBy = "client",fetch = FetchType.LAZY)
+@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
 private Collection<Compte> compte;
 @Override
 public String toString() {
