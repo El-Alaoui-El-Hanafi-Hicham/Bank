@@ -1,4 +1,4 @@
-name: Build and deploy a container
+name: Build and deploy a container with docker-compose
 
 env:
   AZURE_WEBAPP_NAME: weBank
