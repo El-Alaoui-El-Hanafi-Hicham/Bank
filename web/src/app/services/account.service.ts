@@ -11,9 +11,9 @@ import { AccountState } from '../store/account/account.reducer';
 export class AccountService {
 
 
-  private readonly API_URL = (window as any)["env"]?.API_URL || 'http://localhost:8080/api/accounts';
-  private readonly TOKEN_KEY = (window as any)["env"]?.TOKEN_KEY || 'jwt_token';
-  private readonly USER_KEY = (window as any)["env"]?.USER_KEY || 'current_user';
+  private readonly API_URL = 'http://localhost:8080/api/accounts';
+  private readonly TOKEN_KEY = 'jwt_token';
+  private readonly USER_KEY = 'current_user';
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -36,7 +36,8 @@ export class AccountService {
       headers: {
         'Content-Type': 'application/json'
       },
-      responseType: 'text'    });
+      responseType: 'text' // <-- Add this line
+    });
   }
 
   getTransactions(account: Account, page: number = 1, size: number = 10): Observable<any> {
