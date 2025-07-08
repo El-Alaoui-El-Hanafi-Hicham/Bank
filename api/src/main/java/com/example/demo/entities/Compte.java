@@ -27,7 +27,7 @@ public abstract class Compte implements Serializable{
 	
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codeCompte;
 private Date dateCreation;
 private double solde;
@@ -38,7 +38,10 @@ private User user;
 @OneToMany(mappedBy = "compte")
 private Collection<Operation> oparation;
 
-	
+@ManyToOne
+@JoinColumn(name = "client_id")
+private Client client;
+
 	
 	public Long getCodeCompte() {
 		return codeCompte;

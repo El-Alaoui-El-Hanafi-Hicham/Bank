@@ -1,0 +1,36 @@
+#SPRING_DATASOURCE_URL=dbc:mysql://bankweb-mysql.mysql.database.azure.com:3306/Bank?createDatabaseIfNotExist=true
+#SPRING_DATASOURCE_USERNAME=dbadmin
+#SPRING_DATASOURCE_PASSWORD=Alaoui172001
+JWT_SECRET=mySecretKey123456789012345678901234567890123456789012345678901234567890
+JWT_EXPIRATION=86400000
+SPRING_JPA_HIBERNATE_DDL_AUTO=update
+SPRING_JPA_SHOW_SQL=true
+SERVER_PORT=8080
+spring.datasource.url=jdbc:h2:mem:bank
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.h2.console.enabled=true
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.show-sql=true
+spring.application.name=BankApp
+server.port=8080
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+# Connection validation
+spring.datasource.test-on-borrow=true
+spring.datasource.validation-query=SELECT 1
+logging.level.org.springframework.security=DEBUG
+logging.level.com.example.demo.security=DEBUG
+logging.level.org.springframework.web=DEBUG
+logging.level.com.example.demo=DEBUG
+
+jwt.secret=mySecretKey123456789012345678901234567890123456789012345678901234567890
+jwt.expiration=86400000
+spring.profiles.active=dev
+server.error.include-message=always
+server.error.include-binding-errors=always
+# Connection pool settings
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.maximum-pool-size=5
