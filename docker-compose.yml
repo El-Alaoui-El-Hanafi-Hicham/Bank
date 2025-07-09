@@ -1,9 +1,8 @@
 version: '3'
 services:
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
+    image: ghcr.io/el-alaoui-el-hanafi-hicham/bank-web:latest  # 👈 Add this
+    build: ./web
     ports:
       - "4200:80"
     depends_on:
@@ -11,9 +10,8 @@ services:
     environment:
       - API_URL=http://api:8080/api
   api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: ghcr.io/el-alaoui-el-hanafi-hicham/bank-api:latest  # 👈 Add this
+    build: ./api
     ports:
       - "8080:8080"
     volumes:
