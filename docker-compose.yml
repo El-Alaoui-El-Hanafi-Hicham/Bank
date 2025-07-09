@@ -5,7 +5,7 @@ services:
       context: ./web
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - "4200:80"
     depends_on:
       - api
     environment:
@@ -16,21 +16,23 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bank
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-  db:
-    image: postgres
     volumes:
-      - db-data:/var/lib/postgresql/data/
+      -  h2-data:/data
+    # depends_on:
+      # - db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=bank
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:bank
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  # db:
+  #   image: postgres
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data/
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=bank
 
 volumes:
-  db-data:
+  h2-data:
