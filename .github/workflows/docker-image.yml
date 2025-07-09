@@ -36,11 +36,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-          working-directory: api
+          working-directory: ./api
 
       - name: Build Backend
         run: mvn --batch-mode package -DskipTests
-        working-directory: api
+        working-directory: ./api
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
