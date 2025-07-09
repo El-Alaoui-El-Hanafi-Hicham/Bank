@@ -9,8 +9,8 @@ on:
       - main
 
 permissions:
-  contents: 'read'
-  packages: 'write'
+  packages: write  
+  contents: read
 
 jobs:
   build:
