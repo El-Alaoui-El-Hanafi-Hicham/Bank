@@ -1,4 +1,4 @@
-name: Build and deploy a container with docker-compose
+name: Build and Deploy Container
 
 env:
   AZURE_WEBAPP_NAME: weBank
@@ -6,78 +6,67 @@ env:
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
-  packages: write  
+  packages: write
   contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js (Frontend)
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          working-directory: web
 
-      - name: Install frontend dependencies
-        run: npm ci --legacy-peer-deps
+      - name: Install & Build Frontend
+        run: |
+          npm ci --legacy-peer-deps
+          npm run build
         working-directory: web
 
-      - name: Build Angular app
-        run: npm run build
-        working-directory: web
-
-      - name: Set up JDK 17
+      - name: Set up Java (Backend)
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+          working-directory: api
 
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots package -DskipTests
+      - name: Build Backend
+        run: mvn --batch-mode package -DskipTests
         working-directory: api
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub container registry
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-
-      - name: Build and push images with docker-compose
+      - name: Build and Push Images
         run: |
           docker compose -f docker-compose.yml build
           docker compose -f docker-compose.yml push
-          # 👇 Add debug logs
-          docker images  # List all images (verify they exist)
-          docker inspect ghcr.io/el-alaoui-el-hanafi-hicham/bank:latest  # Verify metadata
+          docker images  # Debug
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Lowercase the repo name
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           images: |
-              'ghcr.io/${{ env.REPO }}/bank-web:${{ github.sha }}
-              'ghcr.io/${{ env.REPO }}/bank-api:${{ github.sha }}
+            ghcr.io/${{ env.REPO }}/bank-web:${{ github.sha }}
+            ghcr.io/${{ env.REPO }}/bank-api:${{ github.sha }}
