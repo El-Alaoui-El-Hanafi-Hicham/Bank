@@ -2,6 +2,7 @@ name: Build and deploy a container with docker-compose
 
 env:
   AZURE_WEBAPP_NAME: weBank
+  REPO: el-alaoui-el-hanafi-hicham
 
 on:
   push:
