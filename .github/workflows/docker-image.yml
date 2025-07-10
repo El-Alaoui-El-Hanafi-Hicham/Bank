@@ -1,7 +1,6 @@
 name: Build and Deploy Container
 
 env:
-  AZURE_WEBAPP_NAME: weBank
   REPO: el-alaoui-el-hanafi-hicham
 
 on:
@@ -69,7 +68,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: bank-be
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BE }}
         images: ghcr.io/${{ env.REPO }}/bank-api:${{ github.sha }}  
 
 
@@ -77,5 +76,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: bank-fe
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FE }}
         images: ghcr.io/${{ env.REPO }}/bank-web:${{ github.sha }}  
