@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Account, User } from '../auth/models/auth.models';
 import { Store } from '@ngrx/store';
 import { AccountState } from '../store/account/account.reducer';
+import { EnvService } from './env.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,13 @@ import { AccountState } from '../store/account/account.reducer';
 export class AccountService {
 
 
-  private readonly API_URL = 'http://localhost:8080/api/accounts';
+  private readonly API_URL = `${this.env.apiUrl}/api/accounts`;
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly USER_KEY = 'current_user';
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  constructor(private http: HttpClient, private store:Store<{ accounts: AccountState }>) {}
+  constructor(private http: HttpClient, private store:Store<{ accounts: AccountState }>,private env: EnvService) {}
 
   getUserAccounts(): Observable<any> {
     return this.http.get<Account[]>(`${this.API_URL}`,{
