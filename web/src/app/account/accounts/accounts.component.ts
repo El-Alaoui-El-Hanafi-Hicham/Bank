@@ -8,7 +8,8 @@ import { Account } from '../../auth/models/auth.models';
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.component.html',
-  styleUrl: './accounts.component.css'
+  styleUrl: './accounts.component.css',
+  standalone:false
 })
 export class AccountsComponent implements OnInit {
   loading$: Observable<boolean> = this.store.select(state => state.accounts.loading);

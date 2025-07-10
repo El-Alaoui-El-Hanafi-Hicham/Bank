@@ -12,7 +12,8 @@ import { Actions, ofType } from '@ngrx/effects';
   selector: 'app-add-account',
   templateUrl: './add-account.component.html',
   styleUrls: ['./add-account.component.css'],
-  providers: [MessageService]
+  providers: [MessageService],
+  standalone:false,
 })
 export class AddAccountComponent {
   formGroup: FormGroup;

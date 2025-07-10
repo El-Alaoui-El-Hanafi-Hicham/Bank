@@ -8,7 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.css']
+  styleUrls: ['./account-details.component.css'],
+  standalone:false
 })
 export class AccountDetailsComponent implements OnInit {
   @Input() selectedAccount: any;

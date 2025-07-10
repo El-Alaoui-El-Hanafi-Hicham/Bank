@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
+  standalone:false,
   styleUrl: './main.component.scss'
 })
 export class MainComponent implements OnInit {

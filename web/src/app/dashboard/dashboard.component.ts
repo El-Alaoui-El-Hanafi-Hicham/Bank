@@ -5,6 +5,7 @@ import { User } from '../auth/models/auth.models';
 
 @Component({
   selector: 'app-dashboard',
+  standalone:false,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
