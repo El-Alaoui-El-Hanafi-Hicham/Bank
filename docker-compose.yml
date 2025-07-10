@@ -8,7 +8,7 @@ services:
     depends_on:
       - api
     environment:
-      - API_URL=http://api:8080/api
+      - API_URL=https://bank-be-cpc9gfaxbycmdfbe.francecentral-01.azurewebsites.net
   api:
     image: ghcr.io/el-alaoui-el-hanafi-hicham/bank-api:latest  # 👈 Add this
     build: ./api

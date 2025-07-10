@@ -5,6 +5,7 @@ import { Account, User } from '../auth/models/auth.models';
 import { Store } from '@ngrx/store';
 import { AccountState } from '../store/account/account.reducer';
 import { EnvService } from './env.service';
+import { environment } from '../../../src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { EnvService } from './env.service';
 export class AccountService {
 
 
-  private readonly API_URL = `${this.env.apiUrl}/api/accounts`;
+  private readonly API_URL = `${environment.apiUrl}/api/accounts`;
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly USER_KEY = 'current_user';
 
