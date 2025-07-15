@@ -53,6 +53,7 @@ public class CompteController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             User user = authService.getUser(username);
+
         try {
             String result = accountService.createAccount(user, accountDTO.userType, accountDTO.Solde, accountDTO.TOD);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);

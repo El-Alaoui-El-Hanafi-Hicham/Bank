@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.QPageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IntCompDao;
@@ -28,26 +29,29 @@ public IntOperationDao intOperationDao;
 	}
 
 	@Override
-	public Compte ConsulterCompte(Long number) throws Exception {
+	public Compte ConsulterCompte(Long number)  {
 		// TODO Auto-generated method stub
 		Optional<Compte> com=compteDao.findById(number);
 		if(com.isPresent()){
 
 		return com.get();
+		}else{
+		return null;
 		}
-		throw new Exception("Account Not Found");
 	}
 
 	@Override
-	public void Verser(Long CompteNumber, double amount) throws Exception {
+	public boolean Verser(Long CompteNumber, double amount) throws Exception {
 		Compte compte =ConsulterCompte(CompteNumber);
 		if(compte!=null){
 			Versement versement = new Versement(new Date(),amount,compte);
 			intOperationDao.save(versement);
 			compte.setSolde(compte.getSolde()+amount);
-			compteDao.save(compte);
+			Compte com = compteDao.save(compte);
+			if(com.)
+			return true;
 		}else{
-			System.out.println("Account Not Found");
+			return false;
 		}
 	}
 
@@ -77,19 +81,17 @@ double facilitesDeCaisse=0;
 	}
 
 	@Override
-	public void Virement(Long compteNumber, Long compteNumber2, double amount) {
+	public ResponseEntity<String> Virement(Long compteNumber, Long compteNumber2, double amount)  {
 		try {
 		Compte compte1 =ConsulterCompte(compteNumber);
 		Compte compte2 =ConsulterCompte(compteNumber2);
 
 		if(compte1!=null && compte2!=null){
 			Retrait( compte1.getCodeCompte(),  amount);
-			Verser(compte2.getCodeCompte(),amount);
-			System.out.println("done a weld 3emy");
+		 	Verser(compte2.getCodeCompte(),amount);
+			return ResponseEntity.ok().body("done a weld 3emy");
 		}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return ResponseEntity.badRequest().body("User not found");
 
 	}
 
