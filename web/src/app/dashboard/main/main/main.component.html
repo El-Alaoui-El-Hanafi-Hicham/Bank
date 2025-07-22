@@ -1,56 +1,115 @@
 <div class="welcome-section">
-    <p-card>
-        <ng-template pTemplate="header">
-            <h3>Welcome to Your Bank Account</h3>
-        </ng-template>
-        <ng-template pTemplate="content">
-            <p>Hello {{ currentUser?.username }}! You are successfully logged in.</p>
-            <p>Your email: {{ currentUser?.email }}</p>
-            <p>This is your secure dashboard where you can manage your banking activities.</p>
-        </ng-template>
-    </p-card>
+  <p-card>
+    <ng-template pTemplate="header">
+      <h3>Welcome to Your Bank Account</h3>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <p>Hello {{ currentUser?.username }}! You are successfully logged in.</p>
+      <p>Your email: {{ currentUser?.email }}</p>
+      <p>This is your secure dashboard where you can manage your banking activities.</p>
+    </ng-template>
+  </p-card>
 </div>
 
-<div class="features-section">
-    <div class="feature-grid">
-        <p-card>
-            <ng-template pTemplate="header">
-                <h4>Account Overview</h4>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <p>View your account balances and recent transactions.</p>
-                <p-button label="View Accounts" icon="pi pi-wallet" routerLink="/accounts"></p-button>
-            </ng-template>
-        </p-card>
+<div class="accounts-containe tw-flex tw-flex-col tw-gap-5">
+  <h2 class="tw-text-3xl tw-font-bold">Accounts</h2>
+  <div class="tw-flex tw-gap-3 tw-flex tw-gap-3 tw-justify-between">
 
-        <p-card>
-            <ng-template pTemplate="header">
-                <h4>Transfer Money</h4>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <p>Send money to other accounts or make payments.</p>
-                <p-button label="Transfer" icon="pi pi-send"></p-button>
-            </ng-template>
-        </p-card>
-
-        <p-card>
-            <ng-template pTemplate="header">
-                <h4>Transaction History</h4>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <p>Review your transaction history and statements.</p>
-                <p-button label="View History" icon="pi pi-history"></p-button>
-            </ng-template>
-        </p-card>
-
-        <p-card>
-            <ng-template pTemplate="header">
-                <h4>Settings</h4>
-            </ng-template>
-            <ng-template pTemplate="content">
-                <p>Manage your account settings and preferences.</p>
-                <p-button label="Settings" icon="pi pi-cog"></p-button>
-            </ng-template>
-        </p-card>
+    <div *ngIf="(accounts$ | async)?.length === 0; else AvailableAccounts"
+      class="tw-flex tw-gap-4 tw-flex-wrap tw-w-full tw-items-center tw-justify-center tw-font-bold tw-text-2xl">
+      No accounts found
     </div>
+    <ng-template #AvailableAccounts>
+      <div class="tw-flex tw-gap-5 flex-justify-between">
+
+        <div class="tw-flex tw-gap-4 tw-flex-wrap tw-items-stretch tw-grow grow"
+          *ngIf="!(loading$ | async);else loadingTemplate">
+          <div *ngFor="let account of accounts$ | async"
+            class="account-card tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-6 tw-flex tw-flex-col tw-justify-between tw-w-full sm:tw-w-[30%] tw-min-w-[260px] tw-h-[280px] tw-max-w-xs tw-transition-transform tw-duration-200 hover:tw--translate-y-1 hover:tw-shadow-2xl tw-border-t-4"
+            [ngClass]="{
+        'tw-border-blue-500': account.accountType === 'CC',
+        'tw-border-green-500': account.accountType === 'CE'
+      }">
+            <div class="tw-flex tw-items-center tw-gap-3">
+              <span *ngIf="account.accountType === 'CC'" class="tw-text-blue-500 tw-text-3xl">
+                <i class="fas fa-university"></i>
+              </span>
+              <span *ngIf="account.accountType === 'CE'" class="tw-text-green-500 tw-text-3xl">
+                <i class="fas fa-piggy-bank"></i>
+              </span>
+              <div>
+                <div class="tw-text-xs tw-uppercase tw-text-gray-400">Account Number</div>
+                <div class="tw-font-semibold tw-text-lg">{{account.accountNumber}}</div>
+              </div>
+            </div>
+            <div class="tw-mt-4">
+              <div class="tw-text-xs tw-uppercase tw-text-gray-400">Type</div>
+              <div class="tw-font-semibold tw-text-base">{{account.accountType === 'CC' ? 'Current' : 'Savings'}}</div>
+            </div>
+            <div class="tw-mt-4">
+              <div class="tw-text-xs tw-uppercase tw-text-gray-400">Balance</div>
+              <div class="tw-font-bold tw-text-2xl tw-text-blue-600">{{account.balance | number:'1.2-2'}} $</div>
+            </div>
+            <div class="tw-mt-4 tw-flex tw-items-center tw-gap-2 tw-text-gray-400 tw-text-xs">
+              <i class="fas fa-clock"></i>
+              <span>{{account.timeStamp | date:'medium'}}</span>
+            </div>
+            <button pButton type="button"
+              class="tw-mt-4 tw-bg-black tw-rounded-md tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-flex tw-items-center tw-gap-2 tw-w-fit hover:tw-bg-gray-700 tw-transmition-colors tw-duration-200"
+              [routerLink]="['/accounts',account.accountNumber]" routerLinkActive="router-link-active">
+              SELECT
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </ng-template>
+    <app-add-account class="tw-shadow-lg tw-rounded-xl tw-bg-white tw-p-8 tw-max-w-lg tw-w-1/3"></app-add-account>
+
+    <ng-template #loadingTemplate>
+      <div class="tw-flex tw-gap-4 tw-flex-wrap tw-items-stretch tw-w-1/4">
+        <div *ngFor="let account of accounts$ | async"
+          class="account-card tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-6 tw-flex tw-flex-col tw-justify-between tw-w-full sm:tw-w-[30%] tw-min-w-[260px] tw-max-w-xs tw-transition-transform tw-duration-200 hover:tw--translate-y-1 hover:tw-shadow-2xl tw-border-t-4"
+          [ngClass]="{
+        'tw-border-blue-500': account.accountType === 'CC',
+        'tw-border-green-500': account.accountType === 'CE'
+      }">
+          <div class="tw-flex tw-items-center tw-gap-3">
+            <span *ngIf="account.accountType === 'CC'" class="tw-text-blue-500 tw-text-3xl">
+              <i class="fas fa-university"></i>
+            </span>
+            <span *ngIf="account.accountType === 'CE'" class="tw-text-green-500 tw-text-3xl">
+              <i class="fas fa-piggy-bank"></i>
+            </span>
+            <div>
+              <div class="tw-text-xs tw-uppercase tw-text-gray-400">Account Number</div>
+              <div class="tw-font-semibold tw-text-lg"> <p-skeleton width="6rem" height="2rem" />
+              </div>
+            </div>
+          </div>
+          <div class="tw-mt-4">
+            <div class="tw-text-xs tw-uppercase tw-text-gray-400">Type</div>
+            <div class="tw-font-semibold tw-text-base"> <p-skeleton width="6rem" height="2rem" />
+            </div>
+          </div>
+          <div class="tw-mt-4">
+            <div class="tw-text-xs tw-uppercase tw-text-gray-400">Balance</div>
+            <div class="tw-font-bold tw-text-2xl tw-text-blue-600"> <p-skeleton width="6rem" height="2rem" />
+              $</div>
+          </div>
+          <div class="tw-mt-4 tw-flex tw-items-center tw-gap-2 tw-text-gray-400 tw-text-xs">
+            <i class="fas fa-clock"></i>
+            <span>{{account.timeStamp | date:'medium'}}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
 </div>
+
+<!-- Pass selectedAccount to app-account-details -->
+<!-- <ng-template #selectedAccountTemplate>
+  <app-account-details [selectedAccount]="selectedAccount" class="tw-shadow-lg tw-rounded-xl tw-max-w-lg tw-w-1/3">
+  </app-account-details>
+</ng-template> -->

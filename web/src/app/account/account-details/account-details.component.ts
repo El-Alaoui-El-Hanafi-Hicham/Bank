@@ -48,7 +48,19 @@ export class AccountDetailsComponent implements OnInit {
     this.store.dispatch(AccountActions.loadTransactions({account: this.selectedAccount, page: this.page, size: this.size}));
   }
 
-  onTransactionSubmit() {
+  onTransactionSubmit(type:String) {
+    if (type === 'withdrawal') {
+      if (this.withdrawalForm.valid) {
+        const { amount, description } = this.withdrawalForm.value;
+        this.store.dispatch(AccountActions.makeTransaction({ account: this.selectedAccount, transaction:this.transactionForm.getRawValue() }));
+        console.log('Withdrawal:', { amount, description, account: this.selectedAccount });
+        this.withdrawalForm.reset();
+        this.withdrawalForm.addControl('op', this.fb.control('withdrawal', Validators.required
+        ));
+      }
+      return;
+    }else if (type === 'Virement') {
+
     if (this.transactionForm.valid) {
       const { amount, description } = this.transactionForm.value;
       // TODO: Dispatch an action or call a service to make the transaction
@@ -56,7 +68,7 @@ export class AccountDetailsComponent implements OnInit {
       console.log('Transaction:', { amount, description, account: this.selectedAccount });
       this.transactionForm.reset();
       this.transactionForm.addControl('op', this.fb.control('Virement', Validators.required));
-    }
+    }}
   }
 }
 

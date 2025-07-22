@@ -60,6 +60,7 @@ export class AccountService {
         ...transaction,
         montant: transaction?.amount ?? 1,
       };
+      console.log('Making transaction:', payload);
       return this.http.post(`${this.API_URL}/${account?.accountNumber}/operations`, payload, {
         headers: {
           'Content-Type': 'application/json'

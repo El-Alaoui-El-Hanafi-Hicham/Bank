@@ -14,11 +14,11 @@ import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import {  TableModule } from 'primeng/table';
 import { AccountDetailsComponent } from '../account-details/account-details.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
     AccountsComponent,
-    AddAccountComponent,
     AccountDetailsComponent
   ],
   imports: [
@@ -29,6 +29,7 @@ import { AccountDetailsComponent } from '../account-details/account-details.comp
     InputTextModule,
     TableModule,
     FormsModule,
+    CardModule,
     PanelModule,
     ButtonModule,
     DropdownModule,

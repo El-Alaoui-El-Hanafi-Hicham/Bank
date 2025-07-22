@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { AccountsComponent } from './account/accounts/accounts.component';
 import { MainComponent } from './dashboard/main/main/main.component';
+import { TransactionHistoryComponent } from './Transaction/transaction-history/transaction-history.component';
 
 export const routes: Routes = [
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -15,9 +16,15 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'accounts', loadChildren: () =>
+      { path: 'accounts/:id', loadChildren: () =>
         import('./account/accounts/accounts.module').then(m => m.AccountsModule) },
       // { path: 'settings', component: SettingsComponent }
+      { path: 'transactions',
+        loadChildren: () =>import('./Transaction/transactions.module').then(m => m.TransactionsModule) },
+        // ,children:[
+        // { path: '', component: MainComponent },
+        // { path: 'history', component: TransactionHistoryComponent },
+      // ] },
         { path: '**', component: MainComponent  },
     ]
   },

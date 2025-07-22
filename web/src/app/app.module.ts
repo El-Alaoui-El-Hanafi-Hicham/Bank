@@ -32,13 +32,16 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { accountReducer } from './store/account/account.reducer';
 import { AccountEffects } from './store/account/account.effects';
+import { TransactionHistoryComponent } from './Transaction/transaction-history/transaction-history.component';
+import { MainComponent as MaintTransactions } from './Transaction/main/main.component';
+import { TransactionsModule } from './Transaction/transactions.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    MainComponent
+
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { AccountEffects } from './store/account/account.effects';
     ToastModule,
     RouterLink,
     DashboardModule,
+    TransactionsModule,
     StoreModule.forRoot({ accounts: accountReducer }),
     EffectsModule.forRoot([AccountEffects]), // or forFeature if in a feature module
   ],
