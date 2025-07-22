@@ -97,4 +97,8 @@ public class AuthService {
         throw new RuntimeException();
     }
     }
+
+    public void checkAuthentication() {
+        
+    }
 }

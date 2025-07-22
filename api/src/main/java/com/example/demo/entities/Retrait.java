@@ -11,8 +11,8 @@ public class Retrait extends Operation {
 	public Retrait() {
 	}
 
-	public Retrait(Date dateOperation, double montant, Compte compte) {
-		super( dateOperation, montant, compte);
+	public Retrait(Date dateOperation, double montant, Compte compte,String description) {
+		super( dateOperation, montant, compte,description);
 		// TODO Auto-generated constructor stub
 	}
 

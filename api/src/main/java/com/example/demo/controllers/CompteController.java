@@ -98,13 +98,13 @@ public class CompteController {
         try {
             switch (operationDTO.getOp()) {
                 case "Versement":
-                    bank.Verser(code, operationDTO.getMontant());
+                    bank.Verser(code, operationDTO.getMontant(),"Versement effectué");
                     return ResponseEntity.ok("Versement effectué avec succès.");
                 case "Virement":
                     bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
                     return ResponseEntity.ok("Virement effectué avec succès.");
                 case "Retrait":
-                    bank.Retrait(code, operationDTO.getMontant());
+                    bank.Retrait(code, operationDTO.getMontant(),"Retrait effectué");
                     return ResponseEntity.ok("Retrait effectué avec succès.");
                 default:
                     return ResponseEntity.badRequest().body("Type d'opération inconnu.");

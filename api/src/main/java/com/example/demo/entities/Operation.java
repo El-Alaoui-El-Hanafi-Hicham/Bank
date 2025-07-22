@@ -18,9 +18,12 @@ import jakarta.persistence.ManyToOne;
 public abstract class Operation implements Serializable{
 @Id
 @GeneratedValue(strategy = GenerationType.SEQUENCE)
-private Long numero;
+private Long numero; 
 private Date dateOperation;
 
+
+
+	private String description;
 private double montant;
 @ManyToOne()
 private Compte compte;
@@ -28,12 +31,14 @@ private Compte compte;
 	public Operation() {
 	}
 
-	public Operation(Date dateOperation, double montant, Compte compte) {
+	public Operation(Date dateOperation, double montant, Compte compte,String description) {
 	
 	
 	this.dateOperation = dateOperation;
 	this.montant = montant;
 	this.compte = compte;
+	this.description= description;
+
 }
 public Long getNumero() {
 	return numero;
@@ -59,4 +64,11 @@ public Compte getCompte() {
 public void setCompte(Compte compte) {
 	this.compte = compte;
 }
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

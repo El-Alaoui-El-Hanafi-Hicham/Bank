@@ -35,6 +35,12 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
+    @GetMapping("/check-auth")
+    public ResponseEntity<String> check() {
+        this.authService.checkAuthentication();
+
+        return ResponseEntity.ok("Authentication endpoint is working!");
+    }
     
     @GetMapping("/test")
     public ResponseEntity<String> test() {
@@ -46,15 +52,15 @@ public class AuthController {
     // Error response class
     public static class ErrorResponse {
         private String message;
-        
+
         public ErrorResponse(String message) {
             this.message = message;
         }
-        
+
         public String getMessage() {
             return message;
         }
-        
+
         public void setMessage(String message) {
             this.message = message;
         }

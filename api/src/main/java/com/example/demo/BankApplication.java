@@ -17,7 +17,7 @@ import com.example.demo.entities.Versement;
 import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
-public class BankApplication  {
+public class 	BankApplication  {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(BankApplication.class, args);

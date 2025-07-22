@@ -41,14 +41,14 @@ public IntOperationDao intOperationDao;
 	}
 
 	@Override
-	public boolean Verser(Long CompteNumber, double amount) throws Exception {
+	public boolean Verser(Long CompteNumber, double amount,String description)  {
 		Compte compte =ConsulterCompte(CompteNumber);
 		if(compte!=null){
-			Versement versement = new Versement(new Date(),amount,compte);
+			Versement versement = new Versement(new Date(),amount,compte,description);
 			intOperationDao.save(versement);
 			compte.setSolde(compte.getSolde()+amount);
 			Compte com = compteDao.save(compte);
-			if(com.)
+//			if(com.)
 			return true;
 		}else{
 			return false;
@@ -56,7 +56,7 @@ public IntOperationDao intOperationDao;
 	}
 
 	@Override
-	public void Retrait(Long CompteNumber, double amount) {
+	public boolean Retrait(Long CompteNumber, double amount,String description) {
 		Compte compte = null;
 		try {
 			compte = ConsulterCompte(CompteNumber);
@@ -69,7 +69,7 @@ double facilitesDeCaisse=0;
 				facilitesDeCaisse=((CompteCourant) compte).getDecouverte();
 
 		if(compte.getSolde()+facilitesDeCaisse>=amount){
-				Retrait retrait = new Retrait(new Date(),amount,compte);
+				Retrait retrait = new Retrait(new Date(),amount,compte,description);
 			intOperationDao.save(retrait);
 
 			compte.setSolde(compte.getSolde()-amount);
@@ -78,23 +78,27 @@ double facilitesDeCaisse=0;
 		}else{
 			System.out.println("Account Not Found");
 		}
+		return true;
 	}
 
 	@Override
-	public ResponseEntity<String> Virement(Long compteNumber, Long compteNumber2, double amount)  {
+	public boolean Virement(Long compteNumber, Long compteNumber2, double amount)  {
 		try {
-		Compte compte1 =ConsulterCompte(compteNumber);
-		Compte compte2 =ConsulterCompte(compteNumber2);
+			Compte compte1 = ConsulterCompte(compteNumber);
+			Compte compte2 = ConsulterCompte(compteNumber2);
 
-		if(compte1!=null && compte2!=null){
-			Retrait( compte1.getCodeCompte(),  amount);
-		 	Verser(compte2.getCodeCompte(),amount);
-			return ResponseEntity.ok().body("done a weld 3emy");
+			if (compte1 != null && compte2 != null) {
+				Retrait(compte1.getCodeCompte(), amount, "Virement vers " + compte2.getCodeCompte());
+				Verser(compte2.getCodeCompte(), amount, "Virement depuis " + compte1.getCodeCompte());
+				return true;
+			}
+			return false;
 		}
-		return ResponseEntity.badRequest().body("User not found");
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
-	}
-
+	};
 	@Override
 	public Page<Operation> listOperation(Long compteNumber, int page, int size) {
 
