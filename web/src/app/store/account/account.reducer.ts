@@ -1,18 +1,21 @@
 import { createReducer, on } from '@ngrx/store';
 import { createAction, props } from '@ngrx/store';
-import { loadTransactions, loadTransactionsSuccess } from './account.actions';
+import { clearError, getAccount, getAccountFailure, getAccountSuccess, loadTransactions, loadTransactionsSuccess } from './account.actions';
+import { Account } from '../../auth/models/auth.models';
 
 export interface AccountState {
   accounts: any[];
   loading: boolean;
   error?: any; // Optional: to store error info
   transactionsObj:Object;
+  selectedAccount:Account | undefined;
 }
 
 export const initialState: AccountState = {
   accounts: [],
   loading: false,
   error: null,
+  selectedAccount:undefined ,
   transactionsObj:{
     transactions:[],
     page:1,
@@ -38,10 +41,9 @@ export const accountReducer = createReducer(
   on(loadAccounts, state => ({ ...state, loading: true, error: null })),
   on(loadAccountsSuccess, (state,  actions ) =>{
       const {accounts,page,size}=actions;
-    console.log(accounts.map(account => ({...account,accountType:account?.taux?"CE":"CC",accountNumber:account.codeCompte, balance: account.solde})));;
     return {
     ...state,
-    accounts: accounts.map(account => ({...account,accountType:account?.taux?"CE":"CC",accountNumber:account.codeCompte, balance: account.solde})),
+    accounts: accounts.map(account => ({accountType:account?.taux?"CE":"CC", balance: account.solde,id:account.codeCompte})),
     loading: false,
     error: null
   }}),
@@ -58,5 +60,11 @@ export const accountReducer = createReducer(
     ...state,
     loading: false,
     error
-  }))
+  })),
+  on(getAccount, (state ,actions)=> ({ ...state, loading: true, error: null})),
+
+  on(getAccountSuccess, (state ,actions)=> {
+    return { ...state, loading: false, error: null, selectedAccount:{accountType:actions.obj.taux?"CE":"CC", balance: actions.obj.solde,id:actions.obj.codeCompte,timeStamp:actions.obj.dateCreation}}}),
+  on(getAccountFailure, (state ,actions)=> ({ ...state, loading: false, error: actions})),
+  on(clearError, (state )=> ({ ...state, loading: false, error: null}))
 );

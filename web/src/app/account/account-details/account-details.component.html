@@ -89,41 +89,7 @@
       </ng-template>
     </p-table>
   </div>
-  <div class="tw-flex-1 tw-flex tw-flex-col tw-items-center tw-justify-center w-1/2 tw-gap-3">
-    <div class=" tw-h-fit tw-flex tw-flex-col tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full">
-    <h3 class="tw-text-lg tw-font-bold tw-mb-4 tw-text-blue-700">Make a Transaction</h3>
-    <form [formGroup]="transactionForm" (ngSubmit)="onTransactionSubmit('Virement')" class="tw-flex tw-flex-col tw-gap-4 tw-w-full tw-max-w-xs">
-      <div>
-        <label for="amount" class="tw-block tw-font-semibold tw-mb-1">Amount</label>
-        <p-inputNumber id="amount" formControlName="amount" [min]="1" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter amount"></p-inputNumber>
-      </div>
-       <div>
-        <label for="amount" class="tw-block tw-font-semibold tw-mb-1">Client Account Number</label>
-        <input id="description" type="text" pInputText formControlName="clientCode" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Enter Client Account Number" />
-      </div>
-      <div>
-        <label for="description" class="tw-block tw-font-semibold tw-mb-1">Description</label>
-        <input id="description" type="text" pInputText formControlName="description" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Description" />
-      </div>
-      <p-button label="Submit Transaction" icon="pi pi-send" type="submit" [disabled]="!transactionForm.valid" class="tw-bg-blue-600 tw-text-white tw-font-bold tw-py-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-blue-700 focus:tw-ring-2 focus:tw-ring-blue-400 focus:tw-outline-none tw-mt-2 tw-flex tw-items-center tw-justify-center"></p-button>
-    </form>
-    </div>
-<div class="tw-h-fit tw-flex tw-flex-col tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full">
-    <h3 class="tw-text-lg tw-font-bold tw-mb-4 tw-text-blue-700">Make a Withdrawal</h3>
- <form [formGroup]="withdrawalForm" (ngSubmit)="onTransactionSubmit('withdrawal')" class="tw-flex tw-flex-col tw-gap-4 tw-w-full tw-max-w-xs">
-      <div>
-        <label for="amount" class="tw-block tw-font-semibold tw-mb-1">Amount</label>
-        <p-inputNumber id="amount" formControlName="amount" [min]="1" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter amount"></p-inputNumber>
-      </div>
-      <div>
-        <label for="description" class="tw-block tw-font-semibold tw-mb-1">Description</label>
-        <input id="description" type="text" pInputText formControlName="description" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Description" />
-      </div>
-      <p-button label="Submit Transaction" icon="pi pi-send" type="submit" [disabled]="!withdrawalForm.valid" class="tw-bg-blue-600 tw-text-white tw-font-bold tw-py-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-blue-700 focus:tw-ring-2 focus:tw-ring-blue-400 focus:tw-outline-none tw-mt-2 tw-flex tw-items-center tw-justify-center"></p-button>
-    </form>
-</div>
-  </div>
-</div>
+
 
 
 </div>

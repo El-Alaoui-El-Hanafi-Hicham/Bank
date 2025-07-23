@@ -26,7 +26,6 @@ export interface User {
 }
 export interface Account {
   id: number;
-  accountNumber: string;
   balance: number;
   accountType: string;
   timeStamp: string|Date|number|undefined|null;

@@ -33,3 +33,19 @@ export const makeTransaction = createAction(
   "[Account] Make Transaction",
   props<{ account: Account,transaction: Object }>()
 )
+export const getAccount = createAction(
+  "[Account] Get Account",
+  props<{ id: number }>()
+)
+export const getAccountSuccess = createAction(
+  "[Account] Get Account Success",
+  props<{ obj: any }>()
+)
+export const getAccountFailure = createAction(
+  "[Account] Get Account  Failure",
+  props<{ error: any }>()
+)
+
+export const clearError = createAction(
+  "[Account] Clear Error"
+)

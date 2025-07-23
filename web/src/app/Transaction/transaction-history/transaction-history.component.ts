@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MainComponent } from "../main/main.component";
 import { Store } from '@ngrx/store';
 import { AccountState } from '../../store/account/account.reducer';
 import  * as AccountActions from '../../store/account/account.actions';
+import { ActivatedRoute } from '@angular/router';
+import { Account } from '../../auth/models/auth.models';
 
 interface Transaction {
   id: number;
@@ -19,9 +21,10 @@ interface Transaction {
   standalone: false,
   styleUrls: ['./transaction-history.component.css'],
 })
-export class TransactionHistoryComponent implements OnInit {
-
-
+export class TransactionHistoryComponent implements OnInit,OnChanges {
+  accountDetails!: Account;
+  activeAccoutId: any;
+  selectedAccount$ = this.store.select(state => state.accounts.selectedAccount);
 transactions$: Observable<Transaction[]> = this.store.select(
   state => (state.accounts.transactionsObj as { transactions?: Transaction[] })?.transactions ?? []
 );
@@ -75,23 +78,40 @@ throw new Error('Method not implemented.');
   selectedDateRange: string | null = null;
 
   constructor(
-      private store: Store<{ accounts: AccountState }>,
+      private store: Store<{ accounts: AccountState }>,private route:ActivatedRoute,
     ) {
+    // this.loadTransactions();
+
     }
 
   ngOnInit() {
+      this.route.params.subscribe(params => {
+        this.activeAccoutId = params['id'];
+      })
+      this.getAccount()
+
+    }
+
+ngOnChanges(changes: SimpleChanges) {
+    console.log('myVar changed:',changes);
+}
+    getAccount(){
+      this.store.dispatch(AccountActions.getAccount({id: Number(this.activeAccoutId)}));
+      this.selectedAccount$.subscribe(account => {
+        console.log(account)
+        if(account){
+          this.accountDetails = account;
     this.loadTransactions();
-  }
+
+        }else{
+
+        }
+      })
+    }
 
   loadTransactions() {
-    let account ={
-  id: 52,
-  accountNumber: "52",
-  balance: 131924,
-  accountType: "CV",
-  timeStamp: "2025-07-19T18:55:04.000+00:00",
-}
-    this.store.dispatch(AccountActions.loadTransactions({ account: account, page: 1, size: 10 }));
+    let account =
+    this.store.dispatch(AccountActions.loadTransactions({ account: this.accountDetails, page: 1, size: 10 }));
   }
 
   getSeverity(status: string) {

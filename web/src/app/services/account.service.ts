@@ -13,6 +13,7 @@ import { environment } from '../../../src/environments/environment';
 export class AccountService {
 
 
+
   private readonly API_URL = `${environment.apiUrl}/api/accounts`;
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly USER_KEY = 'current_user';
@@ -20,6 +21,14 @@ export class AccountService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   constructor(private http: HttpClient, private store:Store<{ accounts: AccountState }>,private env: EnvService) {}
+
+    /**
+     * @param code The account code to retrieve
+     * @returns The requested account
+     */
+    getAccount(code: number): Observable<any> {
+        return this.http.get<Account>(`${this.API_URL}/${code}`);
+    }
 
   getUserAccounts(): Observable<any> {
     return this.http.get<Account[]>(`${this.API_URL}`,{
@@ -44,28 +53,30 @@ export class AccountService {
 
   getTransactions(account: Account, page: number = 1, size: number = 10): Observable<any> {
     let payload = {
-      "code": account?.accountNumber,
+      "code": account?.id,
       "page": page,
       "size": size
     };
-    return this.http.get(`${this.API_URL}/${account?.accountNumber}/operations`,  {
+    console.log("the account is -----> ",account)
+    return this.http.get(`${this.API_URL}/${account?.id}/operations`,  {
       headers: {
         'Content-Type': 'application/json'
       },
       responseType: 'json'
     });
   }
-    makeTransaction(account: Account, transaction: { amount?: number; [key: string]: any }): Observable<any> {
+    makeTransaction(account: Account, transaction: any): Observable<any> {
       const payload = {
         ...transaction,
         montant: transaction?.amount ?? 1,
       };
-      console.log('Making transaction:', payload);
-      return this.http.post(`${this.API_URL}/${account?.accountNumber}/operations`, payload, {
+      console.log(payload)
+      return this.http.post(`${this.API_URL}/${account?.id}/operations`, payload, {
         headers: {
           'Content-Type': 'application/json'
         },
-        responseType: 'json'
+        responseType: 'text'
       });
     }
+
 }

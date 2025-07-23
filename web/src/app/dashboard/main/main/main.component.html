@@ -39,7 +39,7 @@
               </span>
               <div>
                 <div class="tw-text-xs tw-uppercase tw-text-gray-400">Account Number</div>
-                <div class="tw-font-semibold tw-text-lg">{{account.accountNumber}}</div>
+                <div class="tw-font-semibold tw-text-lg">{{account.id}}</div>
               </div>
             </div>
             <div class="tw-mt-4">
@@ -56,7 +56,7 @@
             </div>
             <button pButton type="button"
               class="tw-mt-4 tw-bg-black tw-rounded-md tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-flex tw-items-center tw-gap-2 tw-w-fit hover:tw-bg-gray-700 tw-transmition-colors tw-duration-200"
-              [routerLink]="['/accounts',account.accountNumber]" routerLinkActive="router-link-active">
+              [routerLink]="['/accounts',account.id]" routerLinkActive="router-link-active">
               SELECT
             </button>
           </div>

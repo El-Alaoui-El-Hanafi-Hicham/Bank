@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import * as AccountActions from '../../store/account/account.actions';
 import { AccountState } from '../../store/account/account.reducer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AccountService } from '../../services/account.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-account-details',
@@ -25,13 +27,15 @@ export class AccountDetailsComponent implements OnInit {
 
   constructor(
     private store: Store<{ accounts: AccountState }>,
-    private fb: FormBuilder // <-- add FormBuilder
+    private fb: FormBuilder, // <-- add FormBuilder,
+    private transactionService: AccountService,
+    private messageService: MessageService
   ) {
     this.transactionForm = this.fb.group({
       amount: [null, [Validators.required, Validators.min(1)]],
       description: ['', Validators.required],
       clientCode: ['', Validators.required],
-      op: ['Virement', Validators.required]
+      op: ['Transaction', Validators.required]
     });
      this.withdrawalForm = this.fb.group({
       amount: [null, [Validators.required, Validators.min(1)]],
@@ -48,27 +52,24 @@ export class AccountDetailsComponent implements OnInit {
     this.store.dispatch(AccountActions.loadTransactions({account: this.selectedAccount, page: this.page, size: this.size}));
   }
 
-  onTransactionSubmit(type:String) {
-    if (type === 'withdrawal') {
-      if (this.withdrawalForm.valid) {
-        const { amount, description } = this.withdrawalForm.value;
-        this.store.dispatch(AccountActions.makeTransaction({ account: this.selectedAccount, transaction:this.transactionForm.getRawValue() }));
-        console.log('Withdrawal:', { amount, description, account: this.selectedAccount });
-        this.withdrawalForm.reset();
-        this.withdrawalForm.addControl('op', this.fb.control('withdrawal', Validators.required
-        ));
-      }
-      return;
-    }else if (type === 'Virement') {
-
-    if (this.transactionForm.valid) {
+  onTransactionSubmit(type: 'withdrawal' | 'Transaction') {
+    if (type === 'withdrawal' && this.withdrawalForm.valid) {
+      const { amount, description } = this.withdrawalForm.value;
+      this.transactionService.makeTransaction(this.selectedAccount, this.withdrawalForm.getRawValue()).subscribe({
+        next: () => this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transaction successful!' }),
+        error: (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error?.message || 'Transaction failed. Please try again.' })
+      });
+      this.withdrawalForm.reset();
+      this.withdrawalForm.addControl('op', this.fb.control('withdrawal', Validators.required));
+    } else if (type === 'Transaction' && this.transactionForm.valid) {
       const { amount, description } = this.transactionForm.value;
-      // TODO: Dispatch an action or call a service to make the transaction
-      this.store.dispatch(AccountActions.makeTransaction({account: this.selectedAccount, transaction:this.transactionForm.getRawValue()}))
-      console.log('Transaction:', { amount, description, account: this.selectedAccount });
+       this.transactionService.makeTransaction(this.selectedAccount, this.withdrawalForm.getRawValue()).subscribe({
+        next: () => this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transaction successful!' }),
+        error: (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error?.message || 'Transaction failed. Please try again.' })
+      });
       this.transactionForm.reset();
-      this.transactionForm.addControl('op', this.fb.control('Virement', Validators.required));
-    }}
+      this.transactionForm.addControl('op', this.fb.control('Transaction', Validators.required));
+    }
   }
 }
 

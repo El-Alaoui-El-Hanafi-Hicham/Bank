@@ -1,0 +1,144 @@
+<div class="tw-flex tw-flex-col tw-gap-6 tw-justify-center tw-items-stretch tw-w-full">
+
+    <!-- Back Button -->
+    <div class="tw-flex tw-items-center tw-mb-2">
+        <p-button label="Back" icon="pi pi-arrow-left" class="tw-mr-2" (onClick)="goBack()" styleClass="tw-bg-gray-200 tw-text-gray-700 hover:tw-bg-gray-300 tw-rounded-xl" outlined="true"></p-button>
+        <span class="tw-text-lg tw-font-semibold">Transaction</span>
+    </div>
+
+    <!-- Account Info Cards -->
+    <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-6 tw-justify-center tw-items-stretch tw-w-full">
+        <!-- Card 1: Account Summary -->
+        <div class="tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full md:tw-w-2/4 tw-flex-initial tw-flex tw-flex-col tw-items-center tw-justify-center">
+            <div class="tw-text-4xl tw-mb-2">
+                <i class="fas fa-university tw-text-blue-500" *ngIf="(selectedAccount$ | async)?.accountType === 'CC'"></i>
+                <i class="fas fa-piggy-bank tw-text-green-500" *ngIf="(selectedAccount$ | async)?.accountType === 'CE'"></i>
+            </div>
+            <div class="tw-flex tw-justify-between tw-w-full">
+                <div>
+                    <div class="tw-font-bold tw-text-lg tw-mb-1">{{(selectedAccount$ | async)?.id}}</div>
+                    <div class="tw-text-xs tw-uppercase tw-text-gray-400">Account Number</div>
+                </div>
+                <div>
+                    <div class="tw-mt-3 tw-font-semibold tw-text-base">
+                        {{(selectedAccount$ | async)?.accountType === 'CC' ? 'Current' : 'Savings'}}
+                    </div>
+                    <div class="tw-text-xs tw-uppercase tw-text-gray-400">Type</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Balance & Creation Date -->
+        <div class="tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full md:tw-w-1/4 tw-flex-initial tw-flex tw-flex-col tw-items-center tw-justify-center">
+            <div class="tw-text-xs tw-uppercase tw-text-gray-400">Balance</div>
+            <div class="tw-font-bold tw-text-3xl tw-text-blue-600 tw-mb-2">{{(selectedAccount$ | async)?.balance | number:'1.2-2'}} $</div>
+            <div class="tw-text-xs tw-uppercase tw-text-gray-400">Creation Date</div>
+            <div class="tw-font-semibold tw-text-base">{{(selectedAccount$ | async)?.timeStamp | date:'medium'}}</div>
+        </div>
+
+        <!-- Card 3: Details / Overdraft -->
+        <div class="tw-bg-gradient-to-br tw-from-green-400 tw-to-blue-500 tw-rounded-2xl tw-shadow-2xl tw-p-6 tw-w-full md:tw-w-1/4 tw-flex-initial tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-white tw-relative">
+            <div class="tw-absolute tw-top-4 tw-right-4">
+                <i class="pi pi-info-circle tw-text-2xl"></i>
+            </div>
+            <div class="tw-text-lg tw-font-bold tw-mb-2">Account Details</div>
+            <div *ngIf="(selectedAccount$ | async)?.accountType === 'CE'; else noOverdraft" class="tw-flex tw-flex-col tw-items-center">
+                <div class="tw-text-xs tw-uppercase">Overdraft Limit</div>
+                <div class="tw-font-semibold tw-text-2xl">{{(selectedAccount$ | async)?.balance | number:'1.2-2'}} $</div>
+            </div>
+            <ng-template #noOverdraft>
+                <div class="tw-text-xs tw-uppercase">No Overdraft</div>
+            </ng-template>
+            <div class="tw-mt-4 tw-text-center tw-text-sm tw-opacity-80">
+                Thank you for banking with us.<br> For more details, contact your branch.
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Forms -->
+    <div class="tw-flex tw-flex-col md:tw-flex-row tw-items-start tw-justify-center tw-gap-6 tw-w-full">
+        <!-- Make a Transaction -->
+        <div class="tw-h-fit tw-flex tw-flex-col tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full md:tw-w-1/2">
+            <h3 class="tw-text-lg tw-font-bold tw-mb-4 tw-text-blue-700">Make a Transaction</h3>
+            <form [formGroup]="transactionForm" (ngSubmit)="onTransactionSubmit('Transaction')" class="tw-flex tw-flex-col tw-gap-4 tw-w-full tw-max-w-xs">
+                <div>
+                    <label for="amount" class="tw-block tw-font-semibold tw-mb-1">Amount</label>
+                    <p-inputNumber id="amount" formControlName="amount" [min]="1" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter amount"></p-inputNumber>
+                    <div *ngIf="transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">Amount is required and must be greater than 0.</div>
+                </div>
+                <div>
+                    <label for="clientCode" class="tw-block tw-font-semibold tw-mb-1">Client Account Number</label>
+                    <input id="clientCode" type="text" pInputText formControlName="clientCode" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Enter Client Account Number" />
+                    <div *ngIf="transactionForm.get('clientCode')?.invalid && transactionForm.get('clientCode')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">Client Account Number is required.</div>
+                </div>
+                <div>
+                    <label for="description" class="tw-block tw-font-semibold tw-mb-1">Description</label>
+                    <input id="description" type="text" pInputText formControlName="description" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Description" />
+                </div>
+                <div *ngIf="transactionError" class="tw-text-red-600 tw-text-sm tw-mb-2">{{ transactionError }}</div>
+                <div *ngIf="transactionSuccess" class="tw-text-green-600 tw-text-sm tw-mb-2">{{ transactionSuccess }}</div>
+                <p-button label="Submit Transaction" icon="pi pi-send" type="submit" [disabled]="!transactionForm.valid || accountDetails?.accountType !== 'CC'" class="tw-bg-blue-600 tw-text-white tw-font-bold tw-py-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-blue-700 focus:tw-ring-2 focus:tw-ring-blue-400 focus:tw-outline-none tw-mt-2 tw-flex tw-items-center tw-justify-center"
+                    pTooltip="Transactions are only allowed for current accounts.">
+                </p-button>
+                <div *ngIf="accountDetails?.accountType !== 'CC'" class="tw-text-red-500 tw-text-xs tw-mt-2">Transactions are only allowed for current accounts.</div>
+            </form>
+        </div>
+        <!-- Make a Withdrawal -->
+        <div class="tw-h-fit tw-flex tw-flex-col tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-w-full md:tw-w-1/2">
+            <h3 class="tw-text-lg tw-font-bold tw-mb-4 tw-text-blue-700">Make a Withdrawal</h3>
+            <form [formGroup]="withdrawalForm" (ngSubmit)="onTransactionSubmit('withdrawal')" class="tw-flex tw-flex-col tw-gap-4 tw-w-full tw-max-w-xs">
+                <div>
+                    <label for="withdrawalAmount" class="tw-block tw-font-semibold tw-mb-1">Amount</label>
+                    <p-inputNumber id="withdrawalAmount" formControlName="amount" [min]="1" [mode]="'decimal'" [showButtons]="true" class="tw-w-full" placeholder="Enter amount"></p-inputNumber>
+                    <div *ngIf="withdrawalForm.get('amount')?.invalid && withdrawalForm.get('amount')?.touched" class="tw-text-red-500 tw-text-xs tw-mt-1">Amount is required and must be greater than 0.</div>
+                </div>
+                <div>
+                    <label for="withdrawalDescription" class="tw-block tw-font-semibold tw-mb-1">Description</label>
+                    <input id="withdrawalDescription" type="text" pInputText formControlName="description" class="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-h-10 tw-px-3" placeholder="Description" />
+                </div>
+                <div *ngIf="withdrawalError" class="tw-text-red-600 tw-text-sm tw-mb-2">{{ withdrawalError }}</div>
+                <div *ngIf="withdrawalSuccess" class="tw-text-green-600 tw-text-sm tw-mb-2">{{ withdrawalSuccess }}</div>
+                <p-button label="Submit Withdrawal" icon="pi pi-send" type="submit" [disabled]="!withdrawalForm.valid" class="tw-bg-blue-600 tw-text-white tw-font-bold tw-py-2 tw-rounded-lg tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-blue-700 focus:tw-ring-2 focus:tw-ring-blue-400 focus:tw-outline-none tw-mt-2 tw-flex tw-items-center tw-justify-center"></p-button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optionally, add a transaction history table below if needed -->
+    <!--
+  <div class="tw-bg-white tw-rounded-2xl tw-shadow-lg tw-p-6 tw-flex-1 tw-flex tw-flex-col tw-items-start tw-justify-start tw-w-full tw-mt-6">
+    <h3 class="tw-text-lg tw-font-bold tw-mb-4 tw-text-blue-700">Transactions History</h3>
+    <p-table
+      [value]="(transactions$ | async) ?? []"
+      [paginator]="true"
+      [rows]="size"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      class="tw-w-full tw-rounded-xl tw-shadow tw-bg-white tw-overflow-hidden"
+    >
+      <ng-template pTemplate="header">
+        <tr class="tw-bg-gradient-to-r tw-from-blue-500 tw-to-green-400 tw-text-white">
+          <th class="tw-px-4 tw-py-2">#</th>
+          <th class="tw-px-4 tw-py-2">Date</th>
+          <th class="tw-px-4 tw-py-2">Amount</th>
+          <th class="tw-px-4 tw-py-2">Account Code</th>
+          <th class="tw-px-4 tw-py-2">Account Creation</th>
+          <th class="tw-px-4 tw-py-2">Account Balance</th>
+          <th class="tw-px-4 tw-py-2">Overdraft</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
+        <tr class="tw-border-b hover:tw-bg-blue-50 tw-transition-colors">
+          <td class="tw-px-4 tw-py-2 tw-font-semibold">{{ rowIndex + 1 }}</td>
+          <td class="tw-px-4 tw-py-2">{{ transaction.dateOperation | date:'medium' }}</td>
+          <td class="tw-px-4 tw-py-2 tw-text-blue-600 tw-font-bold">{{ transaction.montant | number:'1.2-2' }} $</td>
+          <td class="tw-px-4 tw-py-2">{{ transaction.compte?.codeCompte }}</td>
+          <td class="tw-px-4 tw-py-2">{{ transaction.compte?.dateCreation | date:'medium' }}</td>
+          <td class="tw-px-4 tw-py-2">{{ transaction.compte?.solde | number:'1.2-2' }} $</td>
+          <td class="tw-px-4 tw-py-2">{{ transaction.compte?.decouverte | number:'1.2-2' }} $</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  -->
+
+</div>
