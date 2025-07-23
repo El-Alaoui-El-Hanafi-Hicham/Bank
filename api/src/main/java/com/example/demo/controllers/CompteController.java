@@ -63,8 +63,7 @@ public class CompteController {
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Compte> getAccount(@PathVariable Long code, @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "4") int size) {
+    public ResponseEntity<Compte> getAccount(@PathVariable Long code) {
         try {
             Compte compte = bank.ConsulterCompte(code);
             if (compte == null) {
@@ -94,19 +93,23 @@ public class CompteController {
             @PathVariable Long code,
             @RequestBody OperationDTO operationDTO
             ) {
-        System.out.println(operationDTO.getMontant());
         try {
             switch (operationDTO.getOp()) {
                 case "Versement":
                     bank.Verser(code, operationDTO.getMontant(),"Versement effectué");
                     return ResponseEntity.ok("Versement effectué avec succès.");
-                case "Virement":
-                    bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
+                case "Transaction":
+                    Boolean b= bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
+                    if(b){
                     return ResponseEntity.ok("Virement effectué avec succès.");
-                case "Retrait":
+                    }else{
+                        return ResponseEntity.badRequest().body("Something went wrong, please check all information provided");
+                    }
+                case "withdrawal":
                     bank.Retrait(code, operationDTO.getMontant(),"Retrait effectué");
                     return ResponseEntity.ok("Retrait effectué avec succès.");
                 default:
+                    System.out.println(operationDTO.getOp());
                     return ResponseEntity.badRequest().body("Type d'opération inconnu.");
             }
         } catch (Exception e) {

@@ -33,7 +33,6 @@ public IntOperationDao intOperationDao;
 		// TODO Auto-generated method stub
 		Optional<Compte> com=compteDao.findById(number);
 		if(com.isPresent()){
-
 		return com.get();
 		}else{
 		return null;
@@ -59,26 +58,40 @@ public IntOperationDao intOperationDao;
 	public boolean Retrait(Long CompteNumber, double amount,String description) {
 		Compte compte = null;
 		try {
+			System.out.println("I'm here 4");
 			compte = ConsulterCompte(CompteNumber);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		if(compte!=null){
-double facilitesDeCaisse=0;
+			System.out.println("I'm here 3");
+			double facilitesDeCaisse=0;
 			if(compte instanceof CompteCourant){
+				System.out.println("I'm here 2");
 				facilitesDeCaisse=((CompteCourant) compte).getDecouverte();
 
 		if(compte.getSolde()+facilitesDeCaisse>=amount){
+			System.out.println("I'm here");
 				Retrait retrait = new Retrait(new Date(),amount,compte,description);
 			intOperationDao.save(retrait);
 
 			compte.setSolde(compte.getSolde()-amount);
-			compteDao.save(compte);
-		}}
+			Compte compte1 =compteDao.save(compte);
+			return compte1.equals(compte)?true:false;
 		}else{
-			System.out.println("Account Not Found");
+			System.out.println("I'm here 5");
+
+			return false;
 		}
-		return true;
+			}else{
+				System.out.println("I'm here 6");
+
+				return false;
+			}
+		}else{
+			System.out.println("I'm here 7");
+			return false;
+		}
 	}
 
 	@Override
@@ -86,13 +99,20 @@ double facilitesDeCaisse=0;
 		try {
 			Compte compte1 = ConsulterCompte(compteNumber);
 			Compte compte2 = ConsulterCompte(compteNumber2);
-
+			boolean Vdone=false;
 			if (compte1 != null && compte2 != null) {
-				Retrait(compte1.getCodeCompte(), amount, "Virement vers " + compte2.getCodeCompte());
-				Verser(compte2.getCodeCompte(), amount, "Virement depuis " + compte1.getCodeCompte());
-				return true;
+			boolean Rdone=	Retrait(compte1.getCodeCompte(), amount, "Virement vers " + compte2.getCodeCompte());
+			if(Rdone) {
+				Vdone = Verser(compte2.getCodeCompte(), amount, "Virement depuis " + compte1.getCodeCompte());
+			}else{
+
+				return false;
 			}
+			return Vdone?true:false;
+			}else{
+
 			return false;
+			}
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);

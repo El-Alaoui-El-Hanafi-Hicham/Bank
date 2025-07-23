@@ -35,8 +35,7 @@ public class AuthService {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        System.out.println("UserName =========> "+ request.getUsername());
-        System.out.println("Password =========> "+ request.getPassword());
+
         // Load user details
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));

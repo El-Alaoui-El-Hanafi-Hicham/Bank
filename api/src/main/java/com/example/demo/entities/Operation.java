@@ -3,15 +3,9 @@ package com.example.demo.entities;
 import java.io.Serializable;
 import java.util.Date;
 
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE_OP",discriminatorType = DiscriminatorType.STRING, length = 3)
 @Entity
@@ -26,6 +20,7 @@ private Date dateOperation;
 	private String description;
 private double montant;
 @ManyToOne()
+@JsonBackReference
 private Compte compte;
 
 	public Operation() {
