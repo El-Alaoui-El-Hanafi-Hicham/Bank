@@ -19,7 +19,7 @@ interface Transaction {
   selector: 'app-transaction-history',
   templateUrl: './transaction-history.component.html',
   standalone: false,
-  styleUrls: ['./transaction-history.component.css'],
+  styleUrls: ['./transaction-history.component.scss'],
 })
 export class TransactionHistoryComponent implements OnInit,OnChanges {
   accountDetails!: Account;
@@ -28,6 +28,13 @@ export class TransactionHistoryComponent implements OnInit,OnChanges {
 transactions$: Observable<Transaction[]> = this.store.select(
   state => (state.accounts.transactionsObj as { transactions?: Transaction[] })?.transactions ?? []
 );
+statuses = [
+  { value: 'Pending' },
+  { value: 'Completed' },
+  { value: 'Rejected' },
+];
+statusFilterValue: any;
+
   loading$: Observable<boolean> = this.store.select(state => state.accounts.loading);
 applyFilters() {
 throw new Error('Method not implemented.');
@@ -116,12 +123,10 @@ ngOnChanges(changes: SimpleChanges) {
 
   getSeverity(status: string) {
     switch (status) {
-      case 'INSTOCK':
-        return 'success';
-      case 'LOWSTOCK':
-        return 'warning';
-      case 'OUTOFSTOCK':
+      case 'RET':
         return 'danger';
+      case 'VER':
+        return 'success';
       default:
         return 'info';
     }

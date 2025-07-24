@@ -1,63 +1,122 @@
 <app-main-transactions></app-main-transactions>
-<div class="tw-w-full tw-max-w-4xl tw-mt-8">
-  <div class="tw-flex justify-center mb-6 space-x-6 tw-gap-4">
-    <p-dropdown
-      [options]="statusOptions"
-      [(ngModel)]="selectedStatus"
-      optionLabel="label"
-      placeholder="Filter by Status"
-      class="w-48"
-      [showClear]="true"
-      (onChange)="applyFilters()"
-    ></p-dropdown>
-    <p-dropdown
-      [options]="amountRangeOptions"
-      [(ngModel)]="selectedAmountRange"
-      optionLabel="label"
-      placeholder="Filter by Amount"
-      class="w-48"
-      [showClear]="true"
-      (onChange)="applyFilters()"
-    ></p-dropdown>
-    <p-dropdown
-      [options]="dateRangeOptions"
-      [(ngModel)]="selectedDateRange"
-      optionLabel="label"
-      placeholder="Filter by Date"
-      class="w-48"
-      [showClear]="true"
-      (onChange)="applyFilters()"
-    ></p-dropdown>
-    <p-dropdown
-      [options]="sortOptions"
-      [(ngModel)]="selectedSort"
-      optionLabel="label"
-      placeholder="Sort By"
-      class="w-48"
-      [showClear]="true"
-      (onChange)="onSortChange()"
-    ></p-dropdown>
-  </div>
+<div class="tw-w-full tw-mt-8 ">
 
-  <p-table [value]="(transactions$ | async)||[]" [tableStyle]="{ 'min-width': '60rem' }" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,25,50]" class="shadow-lg rounded-lg overflow-hidden">
-    <ng-template pTemplate="header">
-      <tr class="bg-gray-100 text-gray-700 uppercase text-sm leading-normal">
-        <th class="py-3 px-6 text-left">Amount</th>
-        <th class="py-3 px-6 text-left" pSortableColumn="dateOperation">Date</th>
-        <th class="py-3 px-6 text-left" pSortableColumn="status">Status</th>
-        <th class="py-3 px-6 text-left">Description</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-transaction>
-      <tr class="border-b border-gray-200 hover:bg-gray-100">
-        <td class="py-3 px-6 text-left whitespace-nowrap">{{ transaction.montant }}</td>
-        <td class="py-3 px-6 text-left">{{ transaction.dateOperation }}</td>
-        <td class="py-3 px-6 text-left">
-          <p-tag [value]="transaction.status" [severity]="getSeverity(transaction.status)" class="font-semibold"></p-tag>
-        </td>
-        <td class="py-3 px-6 text-left">{{ transaction.description }}</td>
-      </tr>
-    </ng-template>
+<div class="not-tailwind">
+<p-table
+  [value]="(transactions$ | async) || []"
+  [tableStyle]="{ 'min-width': '80rem' }"
+  [paginator]="true"
+  [rows]="10"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [responsiveLayout]="'scroll'"
+  class="shadow-lg rounded-lg overflow-hidden"
+>
+  <!-- Header and Filter Rows -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 15%">User</th>
+      <th style="width: 15%">Recipient</th>
+      <th style="width: 10%">Amount</th>
+      <th style="width: 15%">Status</th>
+      <th style="width: 25%">Description</th>
+      <th style="width: 20%">Date</th>
+    </tr>
+    <tr>
+      <!-- User Filter -->
+      <th>
+        <p-columnFilter
+          type="text"
+          field="username"
+          placeholder="Filter User"
+          ariaLabel="Filter User"
+          filterOn="input"
+        ></p-columnFilter>
+      </th>
 
-  </p-table>
+      <!-- Recipient Filter -->
+      <th>
+        <p-columnFilter
+          type="text"
+          field="recipientName"
+          placeholder="Filter Recipient"
+          ariaLabel="Filter Recipient"
+          filterOn="input"
+        ></p-columnFilter>
+      </th>
+
+      <!-- Amount Filter -->
+      <th>
+        <p-columnFilter
+          type="text"
+          field="montant"
+          placeholder="Filter Amount"
+          ariaLabel="Filter Amount"
+          filterOn="input"
+        ></p-columnFilter>
+      </th>
+
+      <!-- Status Filter (Dropdown) -->
+      <th>
+        <p-columnFilter field="status" matchMode="equals" [showMenu]="false">
+          <ng-template #filter let-value let-filter="filterCallback">
+            <p-dropdown
+              [(ngModel)]="statusFilterValue"
+              [options]="statuses"
+              optionLabel="value"
+              placeholder="Select Status"
+              (onChange)="filter($event.value)"
+              [showClear]="true"
+            >
+              <ng-template let-option pTemplate="item">
+                <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+              </ng-template>
+            </p-dropdown>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+
+      <!-- Description Filter -->
+      <th>
+        <p-columnFilter
+          type="text"
+          field="description"
+          placeholder="Filter Description"
+          ariaLabel="Filter Description"
+          filterOn="input"
+        ></p-columnFilter>
+      </th>
+
+      <!-- Date Filter -->
+      <th>
+        <p-columnFilter
+          type="text"
+          field="date"
+          placeholder="Filter Date"
+          ariaLabel="Filter Date"
+          filterOn="input"
+        ></p-columnFilter>
+      </th>
+    </tr>
+  </ng-template>
+
+  <!-- Table Body -->
+  <ng-template pTemplate="body" let-transaction>
+    <tr>
+      <td>{{ transaction.compte.user.username }}</td>
+      <td>{{ transaction.recipient.user.username }}</td>
+      <td>{{ transaction.montant }} $</td>
+      <td>
+        <p-tag
+          [value]="transaction.op==='VER' ? 'Deposit' : transaction.op === 'RET' ? 'Withdrawal' : 'Transfer'"
+          [severity]="getSeverity(transaction.op)"
+          class="font-semibold"
+        ></p-tag>
+      </td>
+      <td>{{ transaction.description }}</td>
+      <td>{{ transaction.date | date: 'short' }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+</div>
 </div>

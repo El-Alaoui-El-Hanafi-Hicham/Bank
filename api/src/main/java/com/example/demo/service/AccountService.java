@@ -39,7 +39,7 @@ public class AccountService {
         }else{
             return"SOMETHING WENT WRONG";
         }
-    };
+    }
 
 
 }

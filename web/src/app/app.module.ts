@@ -35,6 +35,8 @@ import { AccountEffects } from './store/account/account.effects';
 import { TransactionHistoryComponent } from './Transaction/transaction-history/transaction-history.component';
 import { MainComponent as MaintTransactions } from './Transaction/main/main.component';
 import { TransactionsModule } from './Transaction/transactions.module';
+import { CarouselModule } from 'primeng/carousel';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import { TransactionsModule } from './Transaction/transactions.module';
     InputTextModule,
     PasswordModule,
     ToastModule,
+    CarouselModule, ButtonModule, TagModule,
     RouterLink,
     DashboardModule,
     TransactionsModule,

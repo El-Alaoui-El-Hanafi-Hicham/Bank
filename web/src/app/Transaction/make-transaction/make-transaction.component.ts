@@ -25,7 +25,7 @@ export class MakeTransactionComponent implements OnInit,OnChanges {
   transactionSuccess: string | undefined = undefined;
   withdrawalError: string | undefined = undefined;
   withdrawalSuccess: string | undefined = undefined;
-
+  clientNotFound: boolean | undefined = false;
   constructor(
     private store: Store<{ accounts: AccountState }>,
     private fb: FormBuilder, // <-- add FormBuilder,
@@ -55,6 +55,22 @@ export class MakeTransactionComponent implements OnInit,OnChanges {
       this.activeAccoutId = params['id'];
     })
     this.getAccount();
+
+  this.transactionForm.valueChanges.subscribe({
+    next: (val) => {
+
+    if(val.clientCode !== '') {
+      this.checkIfAccountExist(val.clientCode)
+    }else{
+      this.clientNotFound = false
+    }
+
+    },
+    error: (error) => {
+      console.log(error)
+      this.clientNotFound = true
+    }
+  });
   }
 
   getAccount(){
@@ -63,9 +79,20 @@ export class MakeTransactionComponent implements OnInit,OnChanges {
       this.accountDetails = account
     })
   }
+  checkIfAccountExist(val:number){
+    this.transactionService.getAccount(val).subscribe({
+    next: (val) => {
+      this.clientNotFound = false
+    },
+    error: (error) => {
+      console.log(error)
+      this.clientNotFound = true
+    }
+  })
+  }
 
   goBack() {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.router.navigate(['../../accounts',this.activeAccoutId], { relativeTo: this.route });
   }
 
   onTransactionSubmit(type: 'withdrawal' | 'Transaction') {

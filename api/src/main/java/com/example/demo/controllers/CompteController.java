@@ -5,7 +5,6 @@ import com.example.demo.dto.AccountDTO;
 import com.example.demo.dto.OperationDTO;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Compte;
-import com.example.demo.entities.Operation;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.IBanque;
@@ -16,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")  // Changed to plural form as per REST conventions
@@ -76,12 +73,12 @@ public class CompteController {
     }
 
     @GetMapping("/{code}/operations")
-    public ResponseEntity<Page<Operation>> getAccountOperations(
+    public ResponseEntity<Page<OperationDTO>> getAccountOperations(
             @PathVariable Long code,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size) {
         try {
-            Page<Operation> operations = bank.listOperation(code, page, size);
+            Page<OperationDTO> operations = bank.listOperation(code, page, size);
             return ResponseEntity.ok(operations);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -96,17 +93,17 @@ public class CompteController {
         try {
             switch (operationDTO.getOp()) {
                 case "Versement":
-                    bank.Verser(code, operationDTO.getMontant(),"Versement effectué");
+                    bank.Verser(code, operationDTO.getMontant(),"Versement effectué",code);
                     return ResponseEntity.ok("Versement effectué avec succès.");
                 case "Transaction":
-                    Boolean b= bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
+                    Boolean b= bank.Virement(code, operationDTO.getCompte().getCodeCompte(), operationDTO.getMontant());
                     if(b){
                     return ResponseEntity.ok("Virement effectué avec succès.");
                     }else{
                         return ResponseEntity.badRequest().body("Something went wrong, please check all information provided");
                     }
                 case "withdrawal":
-                    bank.Retrait(code, operationDTO.getMontant(),"Retrait effectué");
+                    bank.Retrait(code, operationDTO.getMontant(),"Retrait effectué",code);
                     return ResponseEntity.ok("Retrait effectué avec succès.");
                 default:
                     System.out.println(operationDTO.getOp());

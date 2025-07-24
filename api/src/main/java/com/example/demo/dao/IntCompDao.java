@@ -14,5 +14,5 @@ import java.util.List;
 @Repository
 public interface IntCompDao extends JpaRepository<Compte, Long>{
     @Query("SELECT c FROM Compte c WHERE c.user.id = :x")
-    public Page<Compte> findByUserUserID(@Param("x") Long userId, Pageable pageable);
+    Page<Compte> findByUserUserID(@Param("x") Long userId, Pageable pageable);
 }

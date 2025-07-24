@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
@@ -15,11 +16,13 @@ import { SkeletonModule } from 'primeng/skeleton';
 import {  TableModule } from 'primeng/table';
 import { AccountDetailsComponent } from '../account-details/account-details.component';
 import { CardModule } from 'primeng/card';
+import { SettingsComponent } from '../../settings/settings.component';
 
 @NgModule({
   declarations: [
     AccountsComponent,
-    AccountDetailsComponent
+    AccountDetailsComponent,
+    SettingsComponent
   ],
   imports: [
     CommonModule,
@@ -33,9 +36,11 @@ import { CardModule } from 'primeng/card';
     PanelModule,
     ButtonModule,
     DropdownModule,
+    ToggleButtonModule,
     InputNumberModule,
     RouterModule.forChild([
-      { path: '', component: AccountsComponent }
+      { path: '', component: AccountsComponent },
+      { path: 'settings/:id', component: SettingsComponent }
     ])
   ]
 })

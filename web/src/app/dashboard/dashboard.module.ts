@@ -19,6 +19,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { TreeSelectModule } from 'primeng/treeselect';
+import { SettingsComponent } from '../settings/settings.component';
 
 @NgModule({
   declarations: [DashboardComponent, AddAccountComponent, MainComponent],

@@ -10,8 +10,8 @@ public class Versement extends Operation {
 	public Versement() {
 	}
 
-	public Versement(Date dateOperation, double montant, Compte compte,String description) {
-		super( dateOperation, montant, compte,description);
+	public Versement(Date dateOperation, double montant, Compte compte,String description,Compte receipient) {
+		super( dateOperation, montant, compte,description,receipient);
 		// TODO Auto-generated constructor stub
 	}
 
