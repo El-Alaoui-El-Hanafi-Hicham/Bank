@@ -27,6 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("the context is ===>"+request.getServletPath());
+        String path = request.getRequestURI();
 
         // Allow CORS preflight requests to pass through
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
@@ -35,8 +37,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        if (path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")
+                || path.startsWith("/api/auth")
+                || path.startsWith("/h2-console")
+                || path.equals("/error")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
         // Skip filter for authentication endpoints
         if (request.getServletPath().contains("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (request.getServletPath().contains("/swagger-ui.html")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (request.getServletPath().contains("/error")) {
             filterChain.doFilter(request, response);
             return;
         }
