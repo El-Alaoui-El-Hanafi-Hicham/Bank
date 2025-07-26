@@ -16,6 +16,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import {  TableModule } from 'primeng/table';
 import { AccountDetailsComponent } from '../account-details/account-details.component';
 import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
 import { SettingsComponent } from '../../settings/settings.component';
 
 @NgModule({
@@ -36,10 +37,12 @@ import { SettingsComponent } from '../../settings/settings.component';
     PanelModule,
     ButtonModule,
     DropdownModule,
+    ChartModule,
     ToggleButtonModule,
     InputNumberModule,
     RouterModule.forChild([
-      { path: '', component: AccountsComponent },
+      { path: '', component: AccountsComponent, },
+      { path: 'details/:id', component: AccountDetailsComponent },
       { path: 'settings/:id', component: SettingsComponent }
     ])
   ]

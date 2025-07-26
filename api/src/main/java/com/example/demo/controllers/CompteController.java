@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.AccountDTO;
 import com.example.demo.dto.OperationDTO;
+import com.example.demo.dto.OperationDTORequest;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Compte;
 import com.example.demo.service.AccountService;
@@ -88,15 +89,16 @@ public class CompteController {
     @PostMapping("/{code}/operations")
     public ResponseEntity<String> saveOperation(
             @PathVariable Long code,
-            @RequestBody OperationDTO operationDTO
+            @RequestBody OperationDTORequest operationDTO
             ) {
+            System.out.println("client code is ====>"+ operationDTO.toString());
         try {
             switch (operationDTO.getOp()) {
                 case "Versement":
                     bank.Verser(code, operationDTO.getMontant(),"Versement effectué",code);
                     return ResponseEntity.ok("Versement effectué avec succès.");
                 case "Transaction":
-                    Boolean b= bank.Virement(code, operationDTO.getCompte().getCodeCompte(), operationDTO.getMontant());
+                    Boolean b= bank.Virement(code, operationDTO.getClientCode(), operationDTO.getMontant());
                     if(b){
                     return ResponseEntity.ok("Virement effectué avec succès.");
                     }else{

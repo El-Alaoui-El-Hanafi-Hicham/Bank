@@ -69,9 +69,10 @@ export class AccountService {
       const payload = {
         ...transaction,
         montant: transaction?.amount ?? 1,
+        clientCode: Number(transaction.clientCode)
       };
       console.log(payload)
-      return this.http.post(`${this.API_URL}/${account?.id}/operations`, payload, {
+        return this.http.post(`${this.API_URL}/${account?.id}/operations`, payload, {
         headers: {
           'Content-Type': 'application/json'
         },

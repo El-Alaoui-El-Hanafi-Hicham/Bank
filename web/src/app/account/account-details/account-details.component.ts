@@ -24,6 +24,8 @@ export class AccountDetailsComponent implements OnInit {
   );
   transactionForm: FormGroup;
   withdrawalForm: FormGroup;
+  chartData: any;
+  chartOptions: any;
 
   constructor(
     private store: Store<{ accounts: AccountState }>,
@@ -46,6 +48,50 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTransactions();
+       this.chartData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+      datasets: [
+        {
+          label: 'Withdrawals',
+          backgroundColor: '#EC407A',
+          data: [40, 30, 60, 35]
+        },
+        {
+          label: 'Transactions',
+          backgroundColor: '#42A5F5',
+          data: [60, 70, 50, 80]
+        }
+      ]
+    };
+
+    this.chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#333',
+            font: {
+              weight: 'bold'
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: false,
+          ticks: { color: '#333' },
+          grid: { color: '#eee' }
+        },
+        y: {
+          stacked: false,
+          beginAtZero: true,
+          ticks: { color: '#333' },
+          grid: { color: '#eee' }
+        }
+      }
+    };
   }
 
   getTransactions(){

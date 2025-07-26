@@ -12,7 +12,7 @@
                     <h4 class="tw-text-blue-700 tw-font-bold tw-text-lg">Account Overview</h4>
                 </div>
                 <p class="tw-text-blue-800">View your account balances and recent transactions.</p>
-                <p-button label="View Accounts" icon="pi pi-wallet" routerLink="/accounts" class="tw-w-full tw-bg-blue-500 tw-text-white tw-font-bold tw-rounded-lg tw-shadow-sm hover:tw-bg-blue-600 tw-py-3 tw-px-6"></p-button>
+                <p-button label="View Account" [routerLink]="['details',accountId]" icon="pi pi-wallet"  class="tw-w-full tw-bg-blue-500 tw-text-white tw-font-bold tw-rounded-lg tw-shadow-sm hover:tw-bg-blue-600 tw-py-3 tw-px-6"></p-button>
             </div>
             <!-- Card 2 -->
             <div class="tw-shadow-xl tw-rounded-3xl tw-bg-gradient-to-br tw-from-green-50 tw-to-green-100 tw-border-t-8 tw-border-green-400 tw-px-8 tw-py-6 tw-transition-all hover:tw-shadow-2xl hover:tw-scale-105 tw-mb-6 tw-min-h-[220px] tw-flex tw-flex-col tw-gap-2.5">

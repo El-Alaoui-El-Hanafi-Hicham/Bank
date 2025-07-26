@@ -5,52 +5,45 @@ import com.example.demo.entities.Compte;
 import java.util.Date;
 
 
-public class OperationDTO {
+public class OperationDTORequest {
     private String op;
-    private Compte compte;
+    private Long clientCode;
     private double montant;
     private String description;
-    private Compte recipient;
     private Date date;
-    private long codeClient;
 
-    public  OperationDTO(String op, Compte compte, double montant, Compte receipient, String description, Date date,long codeClient) {
+    public OperationDTORequest(String op, long clientCode, double montant,  String description, Date date) {
         this.op= op;
-        this.compte = compte;
         this.montant = montant;
-        this.recipient = receipient;
         this.description = description;
         this.date = date;
-        this.codeClient=codeClient;
+        this.clientCode=clientCode;
     }
 
-    public long getCodeClient() {
-        return codeClient;
-    }
 
-    public void setCodeClient(long codeClient) {
-        this.codeClient = codeClient;
-    }
+
 
     public Date getDate() {
         return date;
+    }
+
+    public long getClientCode() {
+        return clientCode;
+    }
+
+    public void setClientCode(long clientCode) {
+        this.clientCode = clientCode;
     }
 
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public OperationDTO(String op) {
+    public OperationDTORequest(String op) {
         this.op= op;
     }
 
-    public Compte getRecipient() {
-        return recipient;
-    }
 
-    public void setRecipient(Compte recipient) {
-        this.recipient = recipient;
-    }
 
     public String getDescription() {
         return description;
@@ -68,12 +61,15 @@ public class OperationDTO {
         this.op = op;
     }
 
-    public Compte getCompte() {
-        return compte;
-    }
-
-    public void setCompte(Compte compte) {
-        this.compte = compte;
+    @Override
+    public String toString() {
+        return "OperationDTORequest{" +
+                "op='" + op + '\'' +
+                ", clientCode=" + clientCode +
+                ", montant=" + montant +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                '}';
     }
 
     public double getMontant() {

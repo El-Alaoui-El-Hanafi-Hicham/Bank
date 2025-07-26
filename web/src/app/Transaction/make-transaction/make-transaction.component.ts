@@ -105,6 +105,7 @@ export class MakeTransactionComponent implements OnInit,OnChanges {
         next: (val) => {
           this.withdrawalSuccess = val || 'Transaction successful!';
           this.messageService.add({ severity: 'success', summary: 'Success', detail: this.withdrawalSuccess });
+          this.getAccount();
         },
         error: (error) => {
           this.withdrawalError = error.error || 'Transaction failed. Please try again.';
@@ -118,6 +119,7 @@ export class MakeTransactionComponent implements OnInit,OnChanges {
         next: (val) => {
           this.transactionSuccess = val || 'Transaction successful!';
           this.messageService.add({ severity: 'success', summary: 'Success', detail: this.transactionSuccess });
+          this.getAccount();
         },
         error: (error) => {
           this.transactionError = error.error || 'Transaction failed. Please try again.';
